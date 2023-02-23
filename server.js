@@ -188,7 +188,7 @@ APP.use(passport.session());
 
 http.listen(PORT, () => {
     console.log(
-        `servidor htpp escuchado em el puerto http://${process.env.LOCALHOST}:${PORT}/api/productos`
+        `servidor htpp escuchado em el puerto http://localhost:${PORT}/api/productos`
     );
 });
 rutaBase.get('', async (req, res) => {
@@ -210,17 +210,17 @@ rutaBase.get('/:id', async (req, res) => {
 
         const { id } = req.params;
         let buscandoProducto = await objeto.getById(id);
-      
-        if (buscandoProducto == false | buscandoProducto == null |buscandoProducto ==undefined) {
+
+        if (buscandoProducto == false | buscandoProducto == null | buscandoProducto == undefined) {
             res.redirect(`${id}`)
         } else {
             res.json(buscandoProducto);
-        } 
+        }
     } catch (error) {
         logger.log('error', "127.0.0.1 - log error", error)
         res.redirect(`${id}`)
     }
-}); 
+});
 APP.get('/showsession', (req, res) => {
     try {
         res.json(req.session);
