@@ -1,4 +1,8 @@
-require('dotenv').config();
+if (process.env.MODE != "produccion") {
+
+    require('dotenv').config();
+}
+
 const { resultado } = require('./daos/iteradorDeInstancia.js');
 const carritoConstructor = new resultado.carrito();
 const objeto = new resultado.producto();
@@ -6,7 +10,7 @@ const chat = new resultado.chat();
 const express = require('express');
 const multer = require('multer');
 const APP = express();
-const PORT = process.env.PORT | require('./PORT/PORTSERVER.js');
+const PORT = process.env.PORT /* | require('./PORT/PORTSERVER.js'); */
 /* const PORT = parseInt(process.env.argv[2]) | 8080; */
 const http = require('http').createServer(APP);
 const { Router } = express;
