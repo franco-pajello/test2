@@ -190,7 +190,7 @@ APP.use(
 APP.use(passport.initialize());
 APP.use(passport.session());
 
-http.listen(PORT, () => {
+APP.listen(PORT, () => {
     console.log(
         `servidor htpp escuchado em el puerto http://localhost:${PORT}/api/productos`
     );
