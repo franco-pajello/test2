@@ -60,7 +60,7 @@ APP.use(express.urlencoded({ extended: true }));
 
 APP.use(cors({ origin: '*' }));
 
-APP.use('/api/productos', rutaBase);
+APP.use('/api/productos', APP);
 
 APP.use('/api/carrito', rutaCarrito);
 
@@ -157,7 +157,7 @@ passport.deserializeUser((id, done) => {
     Usuarios.findById(id, done);
 });
 
-rutaBase.use(
+APP.use(
     session({
         store: store,
         secret: 'secreto',
@@ -195,7 +195,7 @@ APP.listen(PORT, () => {
         `servidor htpp escuchado em el puerto http://localhost:${PORT}/api/productos`
     );
 });
-rutaBase.get('', async (req, res) => {
+APP.get('', async (req, res) => {
     try {
         let productosArray = await objeto.getAll();
         /*    logger.log('info', "127.0.0.1 - log info", productosArray) */
@@ -209,7 +209,7 @@ rutaBase.get('', async (req, res) => {
         res.json({ error: err });
     }
 });
-rutaBase.get('/:id', async (req, res) => {
+APP.get('/:id', async (req, res) => {
     try {
 
         const { id } = req.params;
@@ -271,7 +271,7 @@ APP.get('/login', async (req, res) => {
     }
 });
 
-rutaBase.get("/info", (req, res) => {
+APP.get("/info", (req, res) => {
     try {
         console.log("hola")
     } catch (error) {
@@ -324,7 +324,7 @@ APP.post(
         failureRedirect: '/faillogin',
     })
 );
-rutaBase.post('/productosFaker', async (req, res) => {
+APP.post('/productosFaker', async (req, res) => {
     try {
 
         const { body } = req;
@@ -347,7 +347,7 @@ rutaBase.post('/productosFaker', async (req, res) => {
         res.json({ error: err });
     }
 });
-rutaBase.post(
+APP.post(
     '/uploadfile',
     (req, res, next) => {
         if (admin == true) {
@@ -372,7 +372,7 @@ rutaBase.post(
 );
 //funciona por postman ↓
 
-rutaBase.put(
+APP.put(
     '/:id',
     (req, res, next) => {
         if (admin == true) {
@@ -395,7 +395,7 @@ rutaBase.put(
     }
 );
 
-rutaBase.delete(
+APP.delete(
     '/:id',
     (req, res, next) => {
 
@@ -509,7 +509,7 @@ io.on('connection', (Socket) => {
     }
 });
 
-rutaBase.get('*', (req, res) => {
+APP.get('*', (req, res) => {
     try {
         let dataTime = new Date()
         logger.log('warn', "ruta inexistente", [{ path: req.path, Time: dataTime }])
