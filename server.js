@@ -271,7 +271,7 @@ APP.get('/login', async (req, res) => {
     }
 });
 
-rutaBase.get("/info", (req, res) => {
+APP.get("/info", (req, res) => {
     try {
         console.log("hola")
     } catch (error) {
@@ -324,7 +324,7 @@ APP.post(
         failureRedirect: '/faillogin',
     })
 );
-rutaBase.post('/productosFaker', async (req, res) => {
+APP.post('/productosFaker', async (req, res) => {
     try {
 
         const { body } = req;
@@ -347,7 +347,7 @@ rutaBase.post('/productosFaker', async (req, res) => {
         res.json({ error: err });
     }
 });
-rutaBase.post(
+APP.post(
     '/uploadfile',
     (req, res, next) => {
         if (admin == true) {
@@ -372,7 +372,7 @@ rutaBase.post(
 );
 //funciona por postman ↓
 
-rutaBase.put(
+APP.put(
     '/:id',
     (req, res, next) => {
         if (admin == true) {
@@ -395,7 +395,7 @@ rutaBase.put(
     }
 );
 
-rutaBase.delete(
+APP.delete(
     '/:id',
     (req, res, next) => {
 
