@@ -60,7 +60,7 @@ APP.use(express.urlencoded({ extended: true }));
 
 APP.use(cors({ origin: '*' }));
 
-APP.use('/api/productos', APP);
+APP.use('/api/productos', rutaBase);
 
 APP.use('/api/carrito', rutaCarrito);
 
@@ -157,7 +157,7 @@ passport.deserializeUser((id, done) => {
     Usuarios.findById(id, done);
 });
 
-APP.use(
+rutaBase.use(
     session({
         store: store,
         secret: 'secreto',
@@ -209,7 +209,7 @@ APP.get('', async (req, res) => {
         res.json({ error: err });
     }
 });
-APP.get('/:id', async (req, res) => {
+rutaBase.get('/:id', async (req, res) => {
     try {
 
         const { id } = req.params;
@@ -271,7 +271,7 @@ APP.get('/login', async (req, res) => {
     }
 });
 
-APP.get("/info", (req, res) => {
+rutaBase.get("/info", (req, res) => {
     try {
         console.log("hola")
     } catch (error) {
@@ -324,7 +324,7 @@ APP.post(
         failureRedirect: '/faillogin',
     })
 );
-APP.post('/productosFaker', async (req, res) => {
+rutaBase.post('/productosFaker', async (req, res) => {
     try {
 
         const { body } = req;
@@ -347,7 +347,7 @@ APP.post('/productosFaker', async (req, res) => {
         res.json({ error: err });
     }
 });
-APP.post(
+rutaBase.post(
     '/uploadfile',
     (req, res, next) => {
         if (admin == true) {
@@ -372,7 +372,7 @@ APP.post(
 );
 //funciona por postman ↓
 
-APP.put(
+rutaBase.put(
     '/:id',
     (req, res, next) => {
         if (admin == true) {
@@ -395,7 +395,7 @@ APP.put(
     }
 );
 
-APP.delete(
+rutaBase.delete(
     '/:id',
     (req, res, next) => {
 
@@ -509,7 +509,7 @@ io.on('connection', (Socket) => {
     }
 });
 
-APP.get('*', (req, res) => {
+rutaBase.get('*', (req, res) => {
     try {
         let dataTime = new Date()
         logger.log('warn', "ruta inexistente", [{ path: req.path, Time: dataTime }])
