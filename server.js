@@ -69,7 +69,7 @@ APP.use('/api/carrito', rutaCarrito);
 APP.set('view engine', 'ejs');
 
 APP.set('views', './views');
-APP.use(
+/* APP.use(
     session({
         secret: 'keyboard cat',
         cookie: {
@@ -81,7 +81,7 @@ APP.use(
         resave: true,
         saveUninitialized: false,
     })
-);
+); */
 async function connectMG() {
     try {
         await connect(process.env.URLMONGO, { useNewUrlParser: true });
@@ -136,6 +136,7 @@ passport.use(
                 const newUser = {
                     username: username,
                     password: createHash(password),
+                    email: req.email
                 };
                 Usuarios.create(newUser, (err, userWintId) => {
                     if (err) {
@@ -157,14 +158,14 @@ passport.deserializeUser((id, done) => {
     Usuarios.findById(id, done);
 });
 
-rutaBase.use(
+/* rutaBase.use(
     session({
         store: store,
         secret: 'secreto',
         resave: false,
         saveUninitialized: false,
     })
-);
+); */
 APP.use(
     session({
         store: store,
@@ -176,6 +177,9 @@ APP.use(
 APP.use(
     session({
         store: storeRedis,
+        /*   secret: 'secreto',
+          resave: false,
+          saveUninitialized: false, */
         cookie: {
             httpOnly: false,
             secure: false,
@@ -193,6 +197,9 @@ APP.use(passport.session());
 APP.listen(PORT, () => {
     console.log(
         `servidor htpp escuchado em el puerto http://localhost:${PORT}/api/productos`
+    );
+    console.log(
+        `servidor htpp escuchado em el puerto http://localhost:${PORT}`
     );
 });
 APP.get('', async (req, res) => {
@@ -255,8 +262,8 @@ APP.get('/failsignup', (req, res) => {
 APP.get('/login', async (req, res) => {
     try {
         if (req.isAuthenticated()) {
-            const { username, password } = req.user;
-            const user = { username, password };
+            const { username, password, email } = req.user;
+            const user = { username, password, email };
             let productosArray = await objeto.getAll();
             return res.render('pages/index', {
                 producto: productosArray,
@@ -282,8 +289,8 @@ APP.get("/info", (req, res) => {
 APP.get('/signup', async (req, res) => {
     try {
         if (req.isAuthenticated()) {
-            const { username, password } = req.body;
-            const user = { username, password };
+            const { username, password, email } = req.body;
+            const user = { username, password, email };
             return res.render('pages/index', {
                 producto: productosArray,
                 usuarioLogeado: user,
@@ -303,7 +310,7 @@ APP.get('/logout', async (req, res) => {
 
         req.session.destroy((err) => {
             if (err) res.send('error inesperado');
-            return res.redirect('http://127.0.0.1:8080/api/productos');
+            return res.redirect(`http://127.0.0.1:${PORT}`);
         });
     } catch (error) {
         logger.log('error', "127.0.0.1 - log error", error)

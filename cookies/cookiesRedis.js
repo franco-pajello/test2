@@ -11,6 +11,6 @@ const storeRedis = new redisStore({
     host: process.env.LOCALHOST,
     port: 6379,
     client,
-    ttl: 300,
+    ttl: 3000,
 });
 module.exports = { storeRedis };

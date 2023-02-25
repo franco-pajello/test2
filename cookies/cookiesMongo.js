@@ -6,7 +6,7 @@ const store = mongoStore.create({
         useNewUrlParser: true,
         useUnifiedTopology: true,
     },
-    ttl: 60,
+    ttl: 600,
 });
 console.log('mongoCookie');
 module.exports = { store };
