@@ -6,6 +6,7 @@ async function nuevoElemento(elemento) {
         precio: elemento.precio,
         img_url: elemento.img_url,
         stock: elemento.stock,
+        categoria: elemento.categoria,
         cantidad: 1,
     });
     await nuevoElemento.save();

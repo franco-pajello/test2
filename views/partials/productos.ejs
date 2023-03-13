@@ -3,10 +3,11 @@
   <div>
     <ul>
       <li><%= produc.producto %></li>
-      <li><img src="<%= produc.img_url %>" alt="#" />%></li>
+      <li><img src="<%= produc.img_url %>" alt="#" /></li>
       <li>$<%= produc.precio %></li>
     </ul>
   </div>
+  <button onclick="cargarProductoCarrito(`<%= produc._id %>`)" >cargar producto al carrito</button>
 </div>
 <% } ) %> <% }else{ %>
 <h2>no hay productos</h2>

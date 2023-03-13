@@ -1,6 +1,24 @@
 const socket = io();
 let html;
+const { logger } = require("../logs/logWinston.js");
 
+async function categoria() {
+    try {
+        let categorias = document.getElementById('categoriasId');
+        let categoria = categorias.value
+        let options = {
+            method: "POST",
+            headers: { "Content-type": "application/json; charset=utf-8 " },
+            body: JSON.stringify({ categoria }),
+        };
+
+        await fetch("http://localhost:8080/categorias", options)
+
+    } catch (e) {
+        logger.log('error', "127.0.0.1 - log error", e);
+    }
+
+}
 async function login() {
     try {
         let options = {
@@ -12,9 +30,9 @@ async function login() {
         };
         await fetch("http://localhost:8080/api/productos/login", options)
             .then((res) => (res.ok ? res.json() : Promise.reject(res)))
-            .catch((err) => console.log(err));
+            .catch((err) => logger.log('error', "127.0.0.1 - log error", err));
     } catch (e) {
-        console.log(e);
+        logger.log('error', "127.0.0.1 - log error", e);
     }
 }
 async function logout() {
@@ -25,28 +43,12 @@ async function logout() {
         };
         await fetch("http://localhost:8080/api/productos/logout", options)
             .then((res) => (res.ok ? res.json() : Promise.reject(res)))
-            .catch((err) => console.log(err));
+            .catch((err) => logger.log('error', "127.0.0.1 - log error",));
     } catch (e) {
-        console.log(e);
+        logger.log('error', "127.0.0.1 - log error", e);
     }
 }
-async function agregarPoductosFaker() {
-    try {
-        let id = 5;
-        let options = {
-            method: "POST",
-            headers: { "Content-type": "application/json; charset=utf-8 " },
-            body: JSON.stringify({ id }),
-        };
-        await fetch("http://localhost:8080/api/productos/productosFaker", options)
-            .then((res) => (res.ok ? res.json() : Promise.reject(res)))
-            .catch((e) => {
-                console.log(e);
-            });
-    } catch (e) {
-        console.log(e);
-    }
-}
+
 function enviarMsg() {
     const fechaActual = Date.now();
     const fecha = new Date(fechaActual);
@@ -86,13 +88,13 @@ socket.on("chatLista", async (data) => {
 
 //metodo get de home
 
-/* (() => {
+/*  (() => {
     try {
         fetch('http://localhost:8080/api/productos')
             .then((res) => (res.ok ? res.json() : Promise.reject(res)))
             .then((data) => {
                 const array = data.productosArray;
-                console.log(array);
+          
                 if (array.length > 0) {
                     let productosId = document.getElementById('productos');
                     array.forEach((produc) => {
@@ -150,11 +152,11 @@ socket.on("chatLista", async (data) => {
                                         <br />`;
                 }
             })
-            .catch((err) => console.log(err));
+            .catch((err) =>  logger.log('error', "127.0.0.1 - log error",err));
     } catch (e) {
-        console.log(e);
+        logger.log('error', "127.0.0.1 - log error", e);
     }
-})(); */
+})();  */
 
 async function cargarProductoDb() {
     try {
@@ -171,14 +173,13 @@ async function cargarProductoDb() {
         };
         await fetch("http://localhost:8080/api/productos/uploadfile", options)
             .then((res) => (res.ok ? res.json() : Promise.reject(res)))
-            .catch((err) => console.log(err));
+            .catch((err) => logger.log('error', "127.0.0.1 - log error", err));
     } catch (e) {
-        console.log(e);
+        logger.log('error', "127.0.0.1 - log error", e);
     }
 }
 
 const enviarProductoAlForm = (id) => {
-    console.log(id);
     try {
         let productoId = (document.getElementById(`productoId`).value =
             document.getElementById(`productoValue${id}`).textContent);
@@ -190,7 +191,7 @@ const enviarProductoAlForm = (id) => {
             document.getElementById(`imgValue${id}`).src);
         let actualizar = (document.getElementById(`actualizar`).value = `${id}`);
     } catch (e) {
-        console.log(e);
+        logger.log('error', "127.0.0.1 - log error", e);
     }
 };
 
@@ -215,7 +216,7 @@ async function actualizarProducto(id) {
                     (document.getElementById(`stockId`).value = ""),
                     (document.getElementById(`myFileId`).value = "")
                 )
-                .catch((err) => console.log(err));
+                .catch((err) => logger.log('error', "127.0.0.1 - log error", err));
         } else {
             (document.getElementById(`productoId`).value = "producto no valido"),
                 (document.getElementById(`precioId`).value = ""),
@@ -223,7 +224,7 @@ async function actualizarProducto(id) {
                 (document.getElementById(`myFileId`).value = "");
         }
     } catch (e) {
-        console.log(e);
+        logger.log('error', "127.0.0.1 - log error", e);
     }
 }
 
@@ -236,67 +237,68 @@ async function EliminarProducto(id) {
         await fetch(`http://localhost:8080/api/productos/${id}`, options)
             .then((res) => (res.ok ? res.json() : Promise.reject(res)))
             .catch((e) => {
-                console.log(e);
+                logger.log('error', "127.0.0.1 - log error", e);
             });
     } catch (e) {
-        console.log(e);
+        logger.log('error', "127.0.0.1 - log error", e);
     }
 }
 
 //metodo GET del carrito
 /* (async () => {
-    try {
-        await fetch('http://localhost:8080/api/carrito')
-            .then((res) => (res.ok ? res.json() : Promise.reject(res)))
-            .then((data) => {
-                const carrito = document.getElementById('carrito');
-                if (data.length > 0) {
-                    data.forEach((elemento) => {
-                        carrito.innerHTML += `<div>
-                    <div>
-                    <ul>
-                    <li>${elemento.producto}</li>
-                    <li><img src=" ${elemento.img} " alt="#" /></li>
-                    <li> ${elemento.stock} </li>
-                    <li>$ ${elemento.precio}</li>
-                    <li>cantidad: ${elemento.cantidad}</li>
-                    <button>+</button>
-                    <button>-</button>
-                    <button onclick=eliminarItemCarrito("${elemento.id ? elemento.id : elemento._id
-                            }")>eliminar</button>
-                    </ul>
-                    </div>
-                    </div>
-                    `;
-                    });
-                } else {
-                    carrito.innerHTML += `<div><h4>no hay productos</h4></div>`;
-                }
-                carrito.innerHTML += `
-                <div>
-                <button onclick=vaciarCarrito()>Vaciar carrito</button>
-                </div>
-                `;
-            });
-    } catch (e) {
-        console.log(e);
-    }
-})(); */
+   try {
+       await fetch('http://localhost:8080/api/carrito')
+           .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+           .then((data) => {
+               const carrito = document.getElementById('carrito');
+               if (data.length > 0) {
+                   data.forEach((elemento) => {
+                       carrito.innerHTML += `<div>
+                   <div>
+                   <ul>
+                   <li>${elemento.producto}</li>
+                   <li><img src=" ${elemento.img} " alt="#" /></li>
+                   <li> ${elemento.stock} </li>
+                   <li>$ ${elemento.precio}</li>
+                   <li>cantidad: ${elemento.cantidad}</li>
+                   <button>+</button>
+                   <button>-</button>
+                   <button onclick=eliminarItemCarrito("${elemento.id ? elemento.id : elemento._id
+                           }")>eliminar</button>
+                   </ul>
+                   </div>
+                   </div>
+                   `;
+                   });
+               } else {
+                   carrito.innerHTML += `<div><h4>no hay productos</h4></div>`;
+               }
+               carrito.innerHTML += `
+               <div>
+               <button onclick=vaciarCarrito()>Vaciar carrito</button>
+               </div>
+               `;
+           });
+   } catch (e) {
+       logger.log('error', "127.0.0.1 - log error", e);
+   }
+})();  */
 
 async function cargarProductoCarrito(id) {
     try {
+
         let options = {
             method: "POST",
             headers: { "Content-type": "application/json; charset=utf-8 " },
             body: JSON.stringify({ id }),
         };
         await fetch("http://localhost:8080/api/carrito", options)
-            .then((res) => (res.ok ? res.json() : Promise.reject(res)))
-            .catch((e) => {
-                console.log(e);
-            });
+        /*  .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+         .catch((e) => {
+             logger.log('error', "127.0.0.1 - log error", e);
+         }); */
     } catch (e) {
-        console.log(e);
+        logger.log('error', "127.0.0.1 - log error", e);
     }
 }
 async function eliminarItemCarrito(value) {
@@ -305,12 +307,11 @@ async function eliminarItemCarrito(value) {
             method: "DELETE",
             headers: { "Content-type": "application/json; charset=utf-8 " },
         };
-        console.log(value);
         await fetch(`http://localhost:8080/api/carrito/${value}`, options)
             .then((res) => (res.ok ? res.json() : Promise.reject(res)))
-            .catch((e) => console.log(e));
+            .catch((e) => logger.log('error', "127.0.0.1 - log error", e));
     } catch (e) {
-        console.log(e);
+        logger.log('error', "127.0.0.1 - log error", e);
     }
 }
 async function vaciarCarrito() {
@@ -321,8 +322,22 @@ async function vaciarCarrito() {
         };
         await fetch(`http://localhost:8080/api/carrito`, options)
             .then((res) => (res.ok ? res.json() : Promise.reject(res)))
-            .catch((e) => console.log(e));
+            .catch((e) => logger.log('error', "127.0.0.1 - log error", e));
     } catch (e) {
-        console.log(e);
+        logger.log('error', "127.0.0.1 - log error", e);
     }
+}
+async function finalizarCompra() {
+    try {
+        let options = {
+            method: "POST",
+            headers: { "Content-type": "application/json; charset=utf-8 " },
+        };
+
+        await fetch("http://localhost:8080/finalizarcompra", options)
+
+    } catch (e) {
+        logger.log('error', "127.0.0.1 - log error", e);
+    }
+
 }

@@ -4,6 +4,7 @@ const modeloDelProducto = new Schema({
     precio: { type: Number, require: true },
     img_url: { type: String, require: true },
     stock: { type: Number, require: true },
+    categoria: { type: String, require: true },
     cantidad: { type: Number, require: true },
 });
 

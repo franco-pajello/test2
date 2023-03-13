@@ -1,12 +1,11 @@
 const mongoStore = require('connect-mongo');
 require('dotenv').config();
 const store = mongoStore.create({
-    mongoUrl: process.env.URLCOOKIEMONGO,
+    mongoUrl: process.env.URLMONGO,
     mongoOptions: {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     },
     ttl: 600,
 });
-console.log('mongoCookie');
 module.exports = { store };

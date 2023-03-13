@@ -1,11 +1,12 @@
 require('dotenv').config();
+const { logger } = require("../logs/logWinston.js");
 const redis = require('redis');
 const session = require('express-session');
 const client = redis.createClient({ legacyMode: true });
 client
     .connect()
-    .then(() => console.log('conectado a redis'))
-    .catch((err) => console.log(err));
+    .then(() => logger.log('info', "127.0.0.1 - conectado a redis"))
+    .catch((error) => logger.log('error', "127.0.0.1 - log error", error));
 const redisStore = require('connect-redis')(session);
 const storeRedis = new redisStore({
     host: process.env.LOCALHOST,

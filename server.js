@@ -2,42 +2,36 @@ if (process.env.MODE != "produccion") {
 
     require('dotenv').config();
 }
-
 const { resultado } = require('./daos/iteradorDeInstancia.js');
 const carritoConstructor = new resultado.carrito();
 const objeto = new resultado.producto();
 const chat = new resultado.chat();
 const express = require('express');
-const multer = require('multer');
+/* const multer = require('multer'); */
 const APP = express();
-const PORT = process.env.PORT /* | require('./PORT/PORTSERVER.js'); */
-/* const PORT = parseInt(process.env.argv[2]) | 8080; */
+const PORT = process.env.PORT
 const http = require('http').createServer(APP);
-const { Router } = express;
-const rutaBase = Router();
-const rutaCarrito = Router();
+/* const { Router } = express; */
 const cors = require('cors');
 const io = require('socket.io')(http);
-const faker = require('faker');
-faker.locale = 'es';
-const { commerce, image } = faker;
 const session = require('express-session');
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
+const { signup } = require('./passport/passportRegistro.js')
+const { login } = require('./passport/loginPassport');
 const { store } = require('./cookies/cookiesMongo.js');
 const { storeRedis } = require('./cookies/cookiesRedis.js');
-const { isValidPassword } = require('./passport/funcionesPassport/validacionContraseña.js');
-const { createHash, } = require('./passport/funcionesPassport/validacionContraseña.js');
-const Usuarios = require('./models/usuarios.js');
-const { connect } = require('mongoose');
 const { logger } = require("./logs/logWinston.js");
-const { url } = require('inspector');
+const Usuarios = require('./models/usuarios.js');
+let productosArray = false;
+let productoCarrito = [];
+const { twilio } = require("./twilioWspMsj.js")
+const { emailConfirmacionCompra } = require("./emails.js")
 //ADMIN
-const admin = true;
+const admin = false;
 //USUARIO SESSION
 let usuarioLogeado = false;
 
-const storage = multer.diskStorage({
+/* const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'uploads');
     },
@@ -51,7 +45,7 @@ const storage = multer.diskStorage({
             file.originalname.split('.').pop()
         );
     },
-});
+}); */
 /* const upload = multer({ storage: storage }); */
 
 APP.use(express.json());
@@ -60,112 +54,10 @@ APP.use(express.urlencoded({ extended: true }));
 
 APP.use(cors({ origin: '*' }));
 
-APP.use('/api/productos', rutaBase);
-
-APP.use('/api/carrito', rutaCarrito);
-
-/* APP.use('/public', express.static(__dirname + '/public')); */
-
 APP.set('view engine', 'ejs');
 
 APP.set('views', './views');
-/* APP.use(
-    session({
-        secret: 'keyboard cat',
-        cookie: {
-            httpOnly: false,
-            secure: false,
-            maxAge: 600, //un dia
-        },
-        rolling: true,
-        resave: true,
-        saveUninitialized: false,
-    })
-); */
-async function connectMG() {
-    try {
-        await connect(process.env.URLMONGO, { useNewUrlParser: true });
-    } catch (e) {
-        console.log(e);
-        throw 'no me conecte';
-    }
-}
-passport.use(
-    'login',
-    new LocalStrategy(async (username, password, done) => {
-        await connectMG()
-            .then(() => console.log('conectado'))
-            .catch((err) => console.log('no conectado', err));
-        Usuarios.findOne({ username: `${username}` }, (err, user) => {
-            if (err) {
-                console.log('login', err);
-                return done(err);
-            }
-            if (!user) {
-                console.log('no se encontro el usuario');
-                return done(null, false);
-            }
-            if (!isValidPassword(user, password)) {
-                console.log('contraseña invalida');
-                return done(null, false);
-            }
-
-            return done(null, user);
-        });
-    })
-);
-
-passport.use(
-    'signup',
-    new LocalStrategy(
-        {
-            passReqToCallback: true,
-        },
-        (req, username, password, done) => {
-            connectMG()
-                .then(() => console.log('conectado'))
-                .catch((err) => console.log('no conectado', err));
-            Usuarios.findOne({ username: `${username}` }, function (err, user) {
-                if (err) {
-                    return done(err);
-                }
-                if (user) {
-                    console.log('usuario existente');
-                    return done(null, false);
-                }
-                const newUser = {
-                    username: username,
-                    password: createHash(password),
-                    email: req.email
-                };
-                Usuarios.create(newUser, (err, userWintId) => {
-                    if (err) {
-                        console.log(err);
-                        return done(err);
-                    }
-                    console.log(user);
-                    console.log('usuario registrado');
-                    return done(null, userWintId);
-                });
-            });
-        }
-    )
-);
-passport.serializeUser((user, done) => {
-    done(null, user._id);
-});
-passport.deserializeUser((id, done) => {
-    Usuarios.findById(id, done);
-});
-
-/* rutaBase.use(
-    session({
-        store: store,
-        secret: 'secreto',
-        resave: false,
-        saveUninitialized: false,
-    })
-); */
+APP.use('/public', express.static(__dirname + '/public'));
 APP.use(
     session({
         store: store,
@@ -195,41 +87,39 @@ APP.use(passport.initialize());
 APP.use(passport.session());
 
 APP.listen(PORT, () => {
-    console.log(
-        `servidor htpp escuchado em el puerto http://localhost:${PORT}/api/productos`
-    );
-    console.log(
-        `servidor htpp escuchado em el puerto http://localhost:${PORT}`
-    );
+    logger.log('info', `servidor htpp escuchado em el puerto http://localhost:${PORT}`)
 });
+
 APP.get('', async (req, res) => {
     try {
-        let productosArray = await objeto.getAll();
-        /*    logger.log('info', "127.0.0.1 - log info", productosArray) */
-        return res.render('pages/index', {
-            producto: productosArray,
-            usuarioLogeado: usuarioLogeado,
-        });
-        /*     res.json({ productosArray, admin }); */
+        if (req.isAuthenticated()) {
+            if (!productosArray) {
+                productosArray = await objeto.getAll()
+                const { username, password, email, foto, telefono, edad } = req.user;
+                const user = { username, password, email, foto, telefono, edad };
+                return res.render('pages/index', {
+                    producto: productosArray,
+                    usuarioLogeado: user,
+                    admin: admin
+                })
+
+            }
+            const { username, password, email, foto, telefono, edad } = req.user;
+            const user = { username, password, email, foto, telefono, edad };
+            return res.render('pages/index', {
+                producto: productosArray,
+                usuarioLogeado: user,
+                admin: admin
+            })
+
+        }
+
+        return res.redirect('/login')
+
+
     } catch (error) {
         logger.log('error', "127.0.0.1 - log error", error)
         res.json({ error: err });
-    }
-});
-rutaBase.get('/:id', async (req, res) => {
-    try {
-
-        const { id } = req.params;
-        let buscandoProducto = await objeto.getById(id);
-
-        if (buscandoProducto == false | buscandoProducto == null | buscandoProducto == undefined) {
-            res.redirect(`${id}`)
-        } else {
-            res.json(buscandoProducto);
-        }
-    } catch (error) {
-        logger.log('error', "127.0.0.1 - log error", error)
-        res.redirect(`${id}`)
     }
 });
 APP.get('/showsession', (req, res) => {
@@ -261,46 +151,19 @@ APP.get('/failsignup', (req, res) => {
 });
 APP.get('/login', async (req, res) => {
     try {
-        if (req.isAuthenticated()) {
-            const { username, password, email } = req.user;
-            const user = { username, password, email };
-            let productosArray = await objeto.getAll();
-            return res.render('pages/index', {
-                producto: productosArray,
-                usuarioLogeado: user,
-            });
-        } else {
-            res.render('partials/login');
-        }
+        res.render('partials/login');
+
     } catch (error) {
         logger.log('error', "127.0.0.1 - log error", error)
-        res.json({ error: err });
+        res.json({ error: error });
     }
 });
-
-APP.get("/info", (req, res) => {
-    try {
-        console.log("hola")
-    } catch (error) {
-        logger.log('error', "127.0.0.1 - log error", error)
-        res.json({ error: err });
-    }
-})
 APP.get('/signup', async (req, res) => {
     try {
-        if (req.isAuthenticated()) {
-            const { username, password, email } = req.body;
-            const user = { username, password, email };
-            return res.render('pages/index', {
-                producto: productosArray,
-                usuarioLogeado: user,
-            });
-        } else {
-            res.render('partials/signup');
-        }
+        res.render('partials/signup');
     } catch (error) {
         logger.log('error', "127.0.0.1 - log error", error)
-        res.json({ error: err });
+        res.json({ error: error });
     }
 });
 
@@ -317,43 +180,40 @@ APP.get('/logout', async (req, res) => {
         res.json({ error: err });
     }
 });
+
+APP.post("/categorias", async (req, res) => {
+    const { body } = req
+    if (body.categoria == 'todo') {
+        productosArray = await objeto.getAll();
+        return res.render('pages/index', {
+            producto: productosArray,
+            usuarioLogeado: usuarioLogeado,
+            admin: admin
+        });
+    } else {
+        productosArray = await objeto.getByAll(body)
+        return res.render('pages/index', {
+            producto: productosArray,
+            usuarioLogeado: usuarioLogeado,
+            admin: admin
+        });
+    }
+
+})
 APP.post(
-    '/signup',
-    passport.authenticate('signup', {
-        successRedirect: '/signup',
+    "/signup",
+    passport.authenticate(signup, {
+        successRedirect: '/',
         failureRedirect: 'failsignup',
     })
 );
 APP.post(
     '/login',
-    passport.authenticate('login', {
-        successRedirect: '/login',
+    passport.authenticate(login, {
+        successRedirect: '/',
         failureRedirect: '/faillogin',
     })
 );
-APP.post('/productosFaker', async (req, res) => {
-    try {
-
-        const { body } = req;
-        const cant = body.id;
-        for (let index = 0; index < cant; index++) {
-            //arme el obj segun el modelo correspondiente
-
-            const arrayFakeProducto = {
-                producto: commerce.product(),
-                precio: JSON.parse(commerce.price(50, 5000)),
-                img_url: `${image.image()}`,
-                stock: faker.datatype.number(100),
-                cantidad: 1,
-            };
-            await objeto.save(arrayFakeProducto);
-        }
-        res.json({ success: true, msg: 'producto cargado' });
-    } catch (error) {
-        logger.log('error', "127.0.0.1 - log error", error)
-        res.json({ error: err });
-    }
-});
 APP.post(
     '/uploadfile',
     (req, res, next) => {
@@ -363,14 +223,13 @@ APP.post(
             res.send({ error: 404, descripcion: 'no autorizado', método: 'post' });
         }
     },
-    (req, res) => {
+    async (req, res) => {
         try {
 
             const { body } = req;
-            console.log(body);
             objeto.save({ ...body });
-
-            res.json({ success: true, msg: 'producto cargado' });
+            return res.redirect("/")
+            /* res.json({ success: true, msg: 'producto cargado' }); */
         } catch (error) {
             logger.log('error', "127.0.0.1 - log error", error)
             res.json({ error: err });
@@ -433,49 +292,118 @@ APP.delete(
 
 //RUTAS DEL CARRITO
 
-rutaCarrito.get('', async (req, res) => {
+APP.get('/api/carrito', async (req, res) => {
     try {
-        let productosCarrito = await carritoConstructor.getAll();
+        if (req.isAuthenticated()) {
 
-        res.json(productosCarrito);
+            const { username, password, email, foto, telefono, edad } = req.user;
+            const user = { username, password, email, foto, telefono, edad };
+            const buscandoUsuario = await Usuarios.findOne({ username });
+            let _idUsuario = buscandoUsuario._id
+            const buscandoCarrito = await carritoConstructor.getById(_idUsuario);
+            let arrayCarrito = buscandoCarrito ? buscandoCarrito.producto : [];
+            return res.render('pages/carrito', {
+                productoCarrito: arrayCarrito,
+                usuarioLogeado: user,
+            });
+
+        }
+        return res.render('pages/carrito', {
+            productoCarrito: productoCarrito,
+            usuarioLogeado: usuarioLogeado,
+        })
+
+
+
     } catch (error) {
         logger.log('error', "127.0.0.1 - log error", error)
-        res.json({ error: err });
+        res.json({ error: error });
     }
 });
 
-rutaCarrito.post('', async (req, res) => {
+APP.post('/api/carrito', async (req, res) => {
     try {
 
-        const { body } = req;
+        if (req.isAuthenticated()) {
+            let arrayCarrito = ''
+            const { username, password, email, foto, telefono, edad } = req.user;
+            const user = { username, password, email, foto, telefono, edad };
+            const buscandoUsuario = await Usuarios.findOne({ username });
+            let _idUsuario = buscandoUsuario._id
+            const { body } = req;
+            const idProducto = await body.id;
+            const buscandoCarrito = await carritoConstructor.getById(_idUsuario);
+            const buscandoProductoDb = await objeto.getById(idProducto);
 
-        const id = await body.id;
+            if (
+                buscandoCarrito == undefined ||
+                buscandoCarrito == null
+            ) {
 
-        const buscandoProductoDbCarrito = await carritoConstructor.getById(id);
+                await carritoConstructor.save(buscandoProductoDb, idProducto, _idUsuario)
 
-        if (
-            buscandoProductoDbCarrito == undefined ||
-            buscandoProductoDbCarrito == null
-        ) {
-            const buscandoProductoDb = await objeto.getById(id);
-            await carritoConstructor.post({ ...buscandoProductoDb, id });
-            const todo = await carritoConstructor.getAll();
-            return todo;
-        } else {
-            const cargandoProducto = await carritoConstructor.post({
-                ...buscandoProductoDbCarrito,
-                id,
-            });
+                return res.render('pages/carrito', {
+                    productoCarrito: arrayCarrito,
+                    usuarioLogeado: user,
+                });
+            } else {
+                arrayCarrito = await buscandoCarrito.producto
 
-            return cargandoProducto;
+                const indiceEncontrado = arrayCarrito.findIndex(
+                    (producto) => producto._id == idProducto
+                );
+
+                if (indiceEncontrado < 0) {
+
+                    await carritoConstructor.upDatePush(idProducto, buscandoProductoDb, _idUsuario)
+
+                    return res.render('pages/carrito', {
+                        productoCarrito: arrayCarrito,
+                        usuarioLogeado: user,
+                    });
+
+                } else {
+                    let cantidad = buscandoCarrito.producto[indiceEncontrado].cantidad
+
+                    await carritoConstructor.upDateById(cantidad, indiceEncontrado, _idUsuario)
+
+                    return res.render('pages/carrito', {
+                        productoCarrito: arrayCarrito,
+                        usuarioLogeado: user,
+                    });
+                }
+
+            }
+
+        }
+        return res.redirect('/login');
+
+    } catch (error) {
+        logger.log('error', "127.0.0.1 - log error", error)
+        res.json({ error: error });
+    }
+});
+APP.post('/finalizarcompra', async (req, res) => {
+    try {
+        if (req.isAuthenticated()) {
+            const { username, email } = req.user;
+            const buscandoUsuario = await Usuarios.findOne({ username });
+            let _idUsuario = buscandoUsuario._id
+            const buscandoCarrito = await carritoConstructor.getById(_idUsuario);
+            let productos = await buscandoCarrito.producto
+
+            await twilio(productos, username)
+            await emailConfirmacionCompra(email, username, productos)
+
+            carritoConstructor.deleteById(_idUsuario)
         }
     } catch (error) {
         logger.log('error', "127.0.0.1 - log error", error)
-        res.json({ error: err });
+        res.json({ error: error });
     }
-});
+})
 
-rutaCarrito.delete('/:id', async (req, res) => {
+APP.delete('/api/carrito/:id', async (req, res) => {
     try {
 
         const { id } = req.params;
@@ -492,7 +420,7 @@ rutaCarrito.delete('/:id', async (req, res) => {
     }
 });
 
-rutaCarrito.delete('', async (req, res) => {
+APP.delete('/api/carrito', async (req, res) => {
     try {
 
         await carritoConstructor.deleteAll();
@@ -516,10 +444,10 @@ io.on('connection', (Socket) => {
     }
 });
 
-rutaBase.get('*', (req, res) => {
+APP.get('*', (req, res) => {
     try {
-        let dataTime = new Date()
-        logger.log('warn', "ruta inexistente", [{ path: req.path, Time: dataTime }])
+        let darrayCarritoime = new Date()
+        logger.log('warn', "ruta inexistente", [{ path: req.path, Time: darrayCarritoime }])
         res.json({ error: 404, descripcion: 'solicitud no encontrada' });
     } catch (error) {
         logger.log('error', "127.0.0.1 - log error", error)

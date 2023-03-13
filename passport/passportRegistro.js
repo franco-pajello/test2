@@ -1,35 +1,64 @@
-const passport = require('passport');
-const LocalStratrgy = require('passport-local').Strategy;
-const usuario = require('../models/usuarios.js');
-passport.use(
-    'signup',
-    new LocalStratrgy(
-        { passReqToCallback: true },
-        (req, nombreUsuario, contraseña, done) => {
-            usuario.findOne({ nombreUsuario }, function (err, usuario) {
+const LocalStrategy = require('passport-local').Strategy;
+const Usuarios = require('../models/usuarios.js');
+const passport = require('passport')
+const { connect } = require('mongoose');
+const { createHash } = require('./funcionesPassport/validacionContraseña.js');
+const { emailDeRegistro } = require('../emails.js')
+const { logger } = require("../logs/logWinston.js");
+async function connectMG() {
+    try {
+        await connect(process.env.URLMONGO, { useNewUrlParser: true });
+    } catch (e) {
+
+        throw logger.log('error', "127.0.0.1 - no me pude conectar a mongo para passport registro");
+    }
+}
+
+connectMG()
+    .then(() => logger.log('info', "127.0.0.1 - conectado a mongo para passport registro"))
+    .catch((err) => logger.log('error', "127.0.0.1 - no conectado a mongo para passport", err));
+
+let signup = new LocalStrategy(
+    {
+        passReqToCallback: true,
+    },
+    (req, username, password, done) => {
+
+        Usuarios.findOne({ username: `${username}` }, function (err, user) {
+            if (err) {
+                logger.log('error', "127.0.0.1 - error inexperado en logeo", err)
+                return done(err);
+            }
+            if (user) {
+                logger.log('error', "127.0.0.1 - usuario exixtente passport registro");
+                return done(null, false);
+            }
+            const newUser = {
+                username: username.toLocaleLowerCase(),
+                email: req.body.email,
+                edad: req.body.edad,
+                calle: req.body.calle,
+                numero: req.body.numero,
+                telefono: req.body.telefono,
+                foto: req.body.foto,
+                password: createHash(password),
+            };
+
+            Usuarios.create(newUser, (err, userWintId) => {
                 if (err) {
-                    console.log(err);
+                    logger.log('error', "127.0.0.1 - error al crear el usuario", err)
                     return done(err);
                 }
-                if (usuario) {
-                    console.log('usuario exixyente');
-                    return done(null, false);
-                }
-
-                const newusuario = {
-                    nombreUsuario: nombreUsuario,
-                    contraseña: contraseña,
-                };
-                usuario.create(newusuario, (err, usuarioWintID) => {
-                    if (err) {
-                        console.log(err);
-                        return done(err);
-                    }
-                    console.log(usuario);
-                    console.log('usuario registrado');
-                    return done(null, usuarioWintID);
-                });
+                emailDeRegistro(req.body.email, username, req.body.edad, req.body.telefono)
+                return done(null, userWintId);
             });
-        }
-    )
-);
+        });
+    }
+)
+passport.serializeUser((user, done) => {
+    done(null, user._id);
+});
+passport.deserializeUser((id, done) => {
+    Usuarios.findById(id, done);
+});
+module.exports = { signup }

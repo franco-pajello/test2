@@ -6,6 +6,6 @@ class productoDaoArchivo extends contenedorRequire.Contenedor {
         super(data);
     }
 }
-const objeto = new productoDaoArchivo();
+new productoDaoArchivo();
 
 module.exports = { productoDaoArchivo };

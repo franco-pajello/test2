@@ -1,4 +1,5 @@
 const { model, connect } = require('mongoose');
+const { logger } = require("../logs/logWinston.js");
 require('dotenv').config();
 
 async function connectMG() {
@@ -6,8 +7,8 @@ async function connectMG() {
         await connect(process.env.URLMONGO, {
             useNewUrlParser: true,
         });
-    } catch (e) {
-        console.log(e);
+    } catch (error) {
+        logger.log('error', "127.0.0.1 - log error", error)
         throw 'no me conecte';
     }
 }
@@ -46,7 +47,16 @@ class Contenedor {
             return { error: true, msg: err };
         }
     }
+    async getByAll(id) {
+        try {
 
+            const TraerTodo = await this.schema.find(id);
+
+            return TraerTodo;
+        } catch (err) {
+            return { error: true, msg: err };
+        }
+    }
     async save(elemento) {
         try {
             this.nuevoElemento(elemento);
@@ -55,7 +65,6 @@ class Contenedor {
             return { success: false, error: err };
         }
     }
-
     async deleteAll() {
         try {
             const TraerTodo = await this.getAll();
@@ -63,11 +72,10 @@ class Contenedor {
                 this.schema
                     .deleteOne({ _id: `${elemento._id}` })
                     .then((res) => {
-                        console.log(res);
                         return { success: true, msg: 'elemento borrado' };
                     })
-                    .catch((e) => {
-                        console.log(e);
+                    .catch((error) => {
+                        logger.log('error', "127.0.0.1 - log error", error)
                         throw new err();
                     });
             }
@@ -81,11 +89,11 @@ class Contenedor {
             await this.schema
                 .deleteOne({ _id: `${id}` })
                 .then((res) => {
-                    console.log(res);
+
                     return { success: true, msg: 'elemento borrado' };
                 })
-                .catch((e) => {
-                    console.log(e);
+                .catch((error) => {
+                    logger.log('error', "127.0.0.1 - log error", error);
                     throw new err();
                 });
         } catch (err) {
@@ -93,17 +101,33 @@ class Contenedor {
         }
     }
 
-    async upDateById(id, body) {
-        console.log(id, body);
-        console.log(id, body.producto);
+    async upDateById(cantidad, indiceEncontrado, _idUsuario) {
+        try {
+            let indice = `producto.${indiceEncontrado}.cantidad`
+            await this.schema.updateOne(
+                { _id: _idUsuario },
+                {
+                    $set: {
+                        [indice]: cantidad + 1
+                    },
+                }
+            );
+        } catch (error) { logger.log('error', "127.0.0.1 - log error", error) }
+    }
+    async upDatePush(id, body, _id) {
         await this.schema.updateOne(
-            { _id: id },
+            { _id: _id },
             {
-                $set: {
-                    producto: body.producto,
-                    precio: body.precio,
-                    img_url: body.img_url,
-                    stock: body.stock,
+                $push: {
+                    producto: [{
+                        _id: id,
+                        producto: body.producto,
+                        precio: body.precio,
+                        img_url: body.img_url,
+                        stock: body.stock,
+                        categoria: body.categoria,
+                        cantidad: 1,
+                    }]
                 },
             }
         );

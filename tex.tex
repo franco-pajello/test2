@@ -1,0 +1,47 @@
+#.env
+    MODE="dev"  
+    PORT="8080"
+    INSTANCIA="mongo"  
+    EMAILADMIN="........"
+    PASSEMAILADMIN="........."
+    URLMONGO= 'mongodb+srv://franco-pajello:tJ7LmKYYZwptLS9G@cluster0.8t2nx9j.mongodb.net/ecommerce'
+    LOCALHOST="127.0.0.1"
+    #  INSTANCIA="archivo"      
+    #  INSTANCIA="firebase"
+
+#scripts
+    "startInspect": "node --inspect server.js"    --> npm run startInspect
+    "start": "node server.js",                    --> npm start -->  para produccion
+    "dev": "nodemon server.js",                   --> npm run dev --> para desarrollo
+    "test": "node benchmark.js"                   --> GOLPEA A LA RUTA INFO CON AUTOCANNON --> npm test
+    "startOx": "0x server.js"                     --> npm run startOx
+
+#levantar el servidor con otro puerto
+    npm start -- node PORT/PORTSERVER.js --port 8088
+
+#levantar en forck con pm2 
+    pm2 start server.js --name="forck" --watch -- node PORT/PORTSERVER.js --port 8080
+
+#levantar el segundo claster con pm2 
+    pm2 start server.js --name="claster" --watch -i max -- node PORT/PORTSERVER.js --port 8082
+
+#Winston loggers
+    logger.log('silly', "127.0.0.1 - log silly")
+    logger.log('debug', "127.0.0.1 - log debug")
+    logger.log('verbose', "127.0.0.1 - log verbose")
+    logger.log('info', "127.0.0.1 - log info")
+    logger.log('warn', "127.0.0.1 - log warn")
+    logger.log('error', "127.0.0.1 - log error")
+
+#Artillery a ruta info
+    artillery quick --count 10 -n 50 "http://localhost:8080/api/productos/info" > result_bloq.txt
+
+#Levantar profile
+    node --prof server.js
+
+#Profile en modo legible
+    node.exe --prof-process bloq-v8.log > result_prof-bloq.txt
+
+#Node inspect en browser
+    chrome://inspect/#devices
+

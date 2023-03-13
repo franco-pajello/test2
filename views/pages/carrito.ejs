@@ -1,20 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
   <%- include ("../partials/head"); %>
-
   <body>
+    <a href="/">volver</a>
     <% if(usuarioLogeado) {%>
       <%-include("../partials/usuario"); %>
-      <a href="/logout">logout</a>
-    <a href="/api/carrito">CARRITO</a>
-   
-     <% if(admin) {%> 
-      <%-include("../partials/form"); %>
-      <% }%> 
-     <%-include("../partials/categorias"); %>
-    <%-include("../partials/productos"); %> <%-include("../partials/chat"); %>
-   
-    <div id="chatLista"></div>
+      <h2>CARRITO</h2>
+    <%-include("../partials/productosCarrito"); %> 
     <% }else{ %>
     <a href="/login">login</a>
     <a href="/signup">reegistrarse</a>

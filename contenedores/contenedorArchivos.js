@@ -30,7 +30,7 @@ class Contenedor {
 
     async save(obj) {
         try {
-            console.log(obj);
+
             const archivoFormatoJs = await this.getAll();
             if (archivoFormatoJs.length == 0) {
                 obj.id = 1;
@@ -67,7 +67,7 @@ class Contenedor {
             archivoFormatoJs = [];
             let archivoFormatoTxt = JSON.stringify(archivoFormatoJs);
             await fs.promises.writeFile(this.ruta, archivoFormatoTxt);
-            return console.log(archivoFormatoJs);
+            return
         } catch (err) {
             return { success: false, error: err };
         }
