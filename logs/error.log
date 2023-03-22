@@ -1,1 +1,0 @@
-{"level":"error","message":"127.0.0.1 - log error Cannot read properties of null (reading 'producto')","stack":"TypeError: Cannot read properties of null (reading 'producto')\n    at C:\\estudio\\test\\test2\\server.js:394:51\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}

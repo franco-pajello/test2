@@ -1,11 +1,11 @@
 const { Schema } = require('mongoose');
 const modeloDelProducto = new Schema({
-    producto: { type: String, require: true },
-    precio: { type: Number, require: true },
-    img_url: { type: String, require: true },
-    stock: { type: Number, require: true },
-    categoria: { type: String, require: true },
-    cantidad: { type: Number, require: true },
+  producto: { type: String, require: false },
+  precio: { type: Number, require: false },
+  img_url: { type: String, require: false },
+  stock: { type: Number, require: false },
+  categoria: { type: String, require: false },
+  cantidad: { type: Number, require: false },
 });
 
 module.exports = { modeloDelProducto };

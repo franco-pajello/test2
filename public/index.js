@@ -1,55 +1,53 @@
-const socket = io();
-let html;
-const { logger } = require("../logs/logWinston.js");
+/* const socket = io(); */
+/* let html; */
+const { logger } = require('../logs/logWinston.js');
 
 async function categoria() {
-    try {
-        let categorias = document.getElementById('categoriasId');
-        let categoria = categorias.value
-        let options = {
-            method: "POST",
-            headers: { "Content-type": "application/json; charset=utf-8 " },
-            body: JSON.stringify({ categoria }),
-        };
+  try {
+    let categorias = document.getElementById('categoriasId');
+    let categoria = categorias.value;
+    let options = {
+      method: 'POST',
+      headers: { 'Content-type': 'application/json; charset=utf-8 ' },
+      body: JSON.stringify({ categoria }),
+    };
 
-        await fetch("http://localhost:8080/categorias", options)
-
-    } catch (e) {
-        logger.log('error', "127.0.0.1 - log error", e);
-    }
-
+    await fetch('http://localhost:8080/categorias', options);
+  } catch (e) {
+    logger.log('error', '127.0.0.1 - log error', e);
+  }
 }
 async function login() {
-    try {
-        let options = {
-            method: "post",
-            headers: { "Content-type": "application/json; charset=utf-8 " },
-            body: JSON.stringify({
-                nombre: document.getElementById("nombreId").value,
-            }),
-        };
-        await fetch("http://localhost:8080/api/productos/login", options)
-            .then((res) => (res.ok ? res.json() : Promise.reject(res)))
-            .catch((err) => logger.log('error', "127.0.0.1 - log error", err));
-    } catch (e) {
-        logger.log('error', "127.0.0.1 - log error", e);
-    }
+  try {
+    let options = {
+      method: 'post',
+      headers: { 'Content-type': 'application/json; charset=utf-8 ' },
+      body: JSON.stringify({
+        nombre: document.getElementById('nombreId').value,
+      }),
+    };
+    await fetch('http://localhost:8080/api/productos/login', options)
+      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+      .catch((err) => logger.log('error', '127.0.0.1 - log error', err));
+  } catch (e) {
+    logger.log('error', '127.0.0.1 - log error', e);
+  }
 }
 async function logout() {
-    try {
-        let options = {
-            method: "post",
-            headers: { "Content-type": "application/json; charset=utf-8 " },
-        };
-        await fetch("http://localhost:8080/api/productos/logout", options)
-            .then((res) => (res.ok ? res.json() : Promise.reject(res)))
-            .catch((err) => logger.log('error', "127.0.0.1 - log error",));
-    } catch (e) {
-        logger.log('error', "127.0.0.1 - log error", e);
-    }
+  try {
+    let options = {
+      method: 'post',
+      headers: { 'Content-type': 'application/json; charset=utf-8 ' },
+    };
+    await fetch('http://localhost:8080/api/productos/logout', options)
+      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+      .catch((err) => logger.log('error', '127.0.0.1 - log error'));
+  } catch (e) {
+    logger.log('error', '127.0.0.1 - log error', e);
+  }
 }
 
-function enviarMsg() {
+/* function enviarMsg() {
     const fechaActual = Date.now();
     const fecha = new Date(fechaActual);
     const fechaFormat = fecha.toLocaleString();
@@ -84,7 +82,7 @@ socket.on("chatLista", async (data) => {
     document.getElementById("chatLista").innerHTML += html;
 
     document.getElementById("textArea").value = "";
-});
+}); */
 
 //metodo get de home
 
@@ -159,89 +157,85 @@ socket.on("chatLista", async (data) => {
 })();  */
 
 async function cargarProductoDb() {
-    try {
-        let options = {
-            method: "POST",
-            headers: { "Content-type": "application/json; charset=utf-8 " },
-            body: JSON.stringify({
-                producto: document.getElementById("productoId").value,
-                precio: document.getElementById("precioId").value,
-                img_url: document.getElementById("myFileId").value,
-                stock: document.getElementById("stockId").value,
-                cantidad: 1,
-            }),
-        };
-        await fetch("http://localhost:8080/api/productos/uploadfile", options)
-            .then((res) => (res.ok ? res.json() : Promise.reject(res)))
-            .catch((err) => logger.log('error', "127.0.0.1 - log error", err));
-    } catch (e) {
-        logger.log('error', "127.0.0.1 - log error", e);
-    }
+  try {
+    let options = {
+      method: 'POST',
+      headers: { 'Content-type': 'application/json; charset=utf-8 ' },
+      body: JSON.stringify({
+        producto: document.getElementById('productoId').value,
+        precio: document.getElementById('precioId').value,
+        img_url: document.getElementById('myFileId').value,
+        stock: document.getElementById('stockId').value,
+        cantidad: 1,
+      }),
+    };
+    await fetch('http://localhost:8080/api/productos/uploadfile', options)
+      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+      .catch((err) => logger.log('error', '127.0.0.1 - log error', err));
+  } catch (e) {
+    logger.log('error', '127.0.0.1 - log error', e);
+  }
 }
 
 const enviarProductoAlForm = (id) => {
-    try {
-        let productoId = (document.getElementById(`productoId`).value =
-            document.getElementById(`productoValue${id}`).textContent);
-        let precioId = (document.getElementById(`precioId`).value =
-            document.getElementById(`precioValue${id}`).textContent);
-        let stockId = (document.getElementById(`stockId`).value =
-            document.getElementById(`stockValue${id}`).textContent);
-        let myFileId = (document.getElementById(`myFileId`).value =
-            document.getElementById(`imgValue${id}`).src);
-        let actualizar = (document.getElementById(`actualizar`).value = `${id}`);
-    } catch (e) {
-        logger.log('error', "127.0.0.1 - log error", e);
-    }
+  try {
+    let productoId = (document.getElementById(`productoId`).value = document.getElementById(`productoValue${id}`).textContent);
+    let precioId = (document.getElementById(`precioId`).value = document.getElementById(`precioValue${id}`).textContent);
+    let stockId = (document.getElementById(`stockId`).value = document.getElementById(`stockValue${id}`).textContent);
+    let myFileId = (document.getElementById(`myFileId`).value = document.getElementById(`imgValue${id}`).src);
+    let actualizar = (document.getElementById(`actualizar`).value = `${id}`);
+  } catch (e) {
+    logger.log('error', '127.0.0.1 - log error', e);
+  }
 };
 
 async function actualizarProducto(id) {
-    try {
-        if (id) {
-            let options = {
-                method: "PUT",
-                headers: { "Content-type": "application/json; charset=utf-8 " },
-                body: JSON.stringify({
-                    producto: document.getElementById(`productoId`).value,
-                    precio: document.getElementById(`precioId`).value,
-                    stock: document.getElementById(`stockId`).value,
-                    img_url: document.getElementById(`myFileId`).value,
-                }),
-            };
-            await fetch(`http://localhost:8080/api/productos/${id}`, options)
-                .then((res) => (res.ok ? res.json() : Promise.reject(res)))
-                .then(
-                    (document.getElementById(`productoId`).value = ""),
-                    (document.getElementById(`precioId`).value = ""),
-                    (document.getElementById(`stockId`).value = ""),
-                    (document.getElementById(`myFileId`).value = "")
-                )
-                .catch((err) => logger.log('error', "127.0.0.1 - log error", err));
-        } else {
-            (document.getElementById(`productoId`).value = "producto no valido"),
-                (document.getElementById(`precioId`).value = ""),
-                (document.getElementById(`stockId`).value = ""),
-                (document.getElementById(`myFileId`).value = "");
-        }
-    } catch (e) {
-        logger.log('error', "127.0.0.1 - log error", e);
+  try {
+    if (id) {
+      let options = {
+        method: 'PUT',
+        headers: { 'Content-type': 'application/json; charset=utf-8 ' },
+        body: JSON.stringify({
+          producto: document.getElementById(`productoId`).value,
+          precio: document.getElementById(`precioId`).value,
+          stock: document.getElementById(`stockId`).value,
+          img_url: document.getElementById(`myFileId`).value,
+        }),
+      };
+      await fetch(`http://localhost:8080/api/productos/${id}`, options)
+        .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+        .then(
+          (document.getElementById(`productoId`).value = ''),
+          (document.getElementById(`precioId`).value = ''),
+          (document.getElementById(`stockId`).value = ''),
+          (document.getElementById(`myFileId`).value = ''),
+        )
+        .catch((err) => logger.log('error', '127.0.0.1 - log error', err));
+    } else {
+      (document.getElementById(`productoId`).value = 'producto no valido'),
+        (document.getElementById(`precioId`).value = ''),
+        (document.getElementById(`stockId`).value = ''),
+        (document.getElementById(`myFileId`).value = '');
     }
+  } catch (e) {
+    logger.log('error', '127.0.0.1 - log error', e);
+  }
 }
 
 async function EliminarProducto(id) {
-    try {
-        let options = {
-            method: "DELETE",
-            headers: { "Content-type": "application/json; charset=utf-8 " },
-        };
-        await fetch(`http://localhost:8080/api/productos/${id}`, options)
-            .then((res) => (res.ok ? res.json() : Promise.reject(res)))
-            .catch((e) => {
-                logger.log('error', "127.0.0.1 - log error", e);
-            });
-    } catch (e) {
-        logger.log('error', "127.0.0.1 - log error", e);
-    }
+  try {
+    let options = {
+      method: 'DELETE',
+      headers: { 'Content-type': 'application/json; charset=utf-8 ' },
+    };
+    await fetch(`http://localhost:8080/api/productos/${id}`, options)
+      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+      .catch((e) => {
+        logger.log('error', '127.0.0.1 - log error', e);
+      });
+  } catch (e) {
+    logger.log('error', '127.0.0.1 - log error', e);
+  }
 }
 
 //metodo GET del carrito
@@ -285,59 +279,56 @@ async function EliminarProducto(id) {
 })();  */
 
 async function cargarProductoCarrito(id) {
-    try {
-
-        let options = {
-            method: "POST",
-            headers: { "Content-type": "application/json; charset=utf-8 " },
-            body: JSON.stringify({ id }),
-        };
-        await fetch("http://localhost:8080/api/carrito", options)
-        /*  .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+  try {
+    let options = {
+      method: 'POST',
+      headers: { 'Content-type': 'application/json; charset=utf-8 ' },
+      body: JSON.stringify({ id }),
+    };
+    await fetch('http://localhost:8080/api/carrito', options);
+    /*  .then((res) => (res.ok ? res.json() : Promise.reject(res)))
          .catch((e) => {
              logger.log('error', "127.0.0.1 - log error", e);
          }); */
-    } catch (e) {
-        logger.log('error', "127.0.0.1 - log error", e);
-    }
+  } catch (e) {
+    logger.log('error', '127.0.0.1 - log error', e);
+  }
 }
 async function eliminarItemCarrito(value) {
-    try {
-        let options = {
-            method: "DELETE",
-            headers: { "Content-type": "application/json; charset=utf-8 " },
-        };
-        await fetch(`http://localhost:8080/api/carrito/${value}`, options)
-            .then((res) => (res.ok ? res.json() : Promise.reject(res)))
-            .catch((e) => logger.log('error', "127.0.0.1 - log error", e));
-    } catch (e) {
-        logger.log('error', "127.0.0.1 - log error", e);
-    }
+  try {
+    let options = {
+      method: 'DELETE',
+      headers: { 'Content-type': 'application/json; charset=utf-8 ' },
+    };
+    await fetch(`http://localhost:8080/api/carrito/${value}`, options)
+      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+      .catch((e) => logger.log('error', '127.0.0.1 - log error', e));
+  } catch (e) {
+    logger.log('error', '127.0.0.1 - log error', e);
+  }
 }
 async function vaciarCarrito() {
-    try {
-        let options = {
-            method: "DELETE",
-            headers: { "Content-type": "application/json; charset=utf-8 " },
-        };
-        await fetch(`http://localhost:8080/api/carrito`, options)
-            .then((res) => (res.ok ? res.json() : Promise.reject(res)))
-            .catch((e) => logger.log('error', "127.0.0.1 - log error", e));
-    } catch (e) {
-        logger.log('error', "127.0.0.1 - log error", e);
-    }
+  try {
+    let options = {
+      method: 'DELETE',
+      headers: { 'Content-type': 'application/json; charset=utf-8 ' },
+    };
+    await fetch(`http://localhost:8080/api/carrito`, options)
+      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+      .catch((e) => logger.log('error', '127.0.0.1 - log error', e));
+  } catch (e) {
+    logger.log('error', '127.0.0.1 - log error', e);
+  }
 }
 async function finalizarCompra() {
-    try {
-        let options = {
-            method: "POST",
-            headers: { "Content-type": "application/json; charset=utf-8 " },
-        };
+  try {
+    let options = {
+      method: 'POST',
+      headers: { 'Content-type': 'application/json; charset=utf-8 ' },
+    };
 
-        await fetch("http://localhost:8080/finalizarcompra", options)
-
-    } catch (e) {
-        logger.log('error', "127.0.0.1 - log error", e);
-    }
-
+    await fetch('http://localhost:8080/finalizarcompra', options);
+  } catch (e) {
+    logger.log('error', '127.0.0.1 - log error', e);
+  }
 }

@@ -1,11 +1,12 @@
 const mongoStore = require('connect-mongo');
-require('dotenv').config();
+/* require('dotenv').config(); */
+const config = require('../config/config.js');
 const store = mongoStore.create({
-    mongoUrl: process.env.URLMONGO,
-    mongoOptions: {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    },
-    ttl: 600,
+  mongoUrl: config.HOST,
+  mongoOptions: {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  },
+  ttl: 600,
 });
 module.exports = { store };
