@@ -7,7 +7,7 @@
     "startInspect": "node --inspect server.js",
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "dw": "set NODE_ENV=dev&& nodemon server.js",
+    "dw": "set NODE_ENV=dev&& set PORT=8080&&  set TIPO_PERSISTENCIA=mongo&&  set EMAILADMIN=francopajello@gmail.com&& set PASSEMAILADMIN=dsycrdenpdrtlzpn&& set HOST=mongodb+srv://franco-pajello:tJ7LmKYYZwptLS9G@cluster0.8t2nx9j.mongodb.net/ecommerce&& set LOCALHOST=127.0.0.1&& nodemon server.js",
     "test": "mocha ./test/testRutaProductos.js",
     "startOx": "0x server.js"
   },
