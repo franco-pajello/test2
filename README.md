@@ -1,9 +1,9 @@
 # Ecommerce
 ## _Franco Pajello_
-Ecommerce en capas MVC basado en node.js y express .
+Ecommerce en capas MVC basado en node.js y express con Mondo Atlas como base de datos.
 ## Tecnologia
 se utiliza una serie de proyectos de código abierto para funcionar correctamente:
-- [JavaScript] -
+- [JavaScript] 
 - [node.js] 
 - [Express] 
 - [Ejs] 
@@ -15,15 +15,17 @@ se utiliza una serie de proyectos de código abierto para funcionar correctament
 Pagina de inicio:
 
 ```sh
-contiene la informacion del usuario logeado junto a un catalogo de productos que se pueden filtrar por categorias ademas de agregar el prodcto al carrito y comunicarse con soporte mediante un chat 
+contiene la informacion del usuario logeado junto a un catalogo de productos que se pueden
+filtrar por categorias ademas de agregar el prodcto al carrito y comunicarse con soporte 
+mediante un chat 
 ```
 
 Pagina del carrito:
 
 ```sh
 en la misma podemos encontrar los producto seleccionados por el usuario, al cual desde alli
-mismo podemos sumar, restar o eliminar dicho producto
-tambien podremos apreciar el boton para finalizar la compra
+mismo podemos sumar, restar o eliminar dicho producto tambien podremos apreciar el boton 
+para finalizar la compra
 ```
 ## Como levantar el proyecto 
 ✨Se recomienda al momento de descargar las dependencias para el proyecto utilizar npm ci
@@ -54,7 +56,7 @@ En un archivo dev.env
 |Nombre | Valor |
 | ------ | ------ |
 | NODE_ENV | "dev"|
-| PORT | "8082"|
+| PORT | "8080"|
 | TIPO_PERSISTENCIA| "mongo" |
 | EMAILADMIN | xxxxxx |
 | PASSEMAILADMIN | xxxxx |
@@ -68,7 +70,6 @@ En un archivo dev.env
 | nombre | admin|
 | email | admin@gmail.com|
 | contraseña| admin |
-|Nombre | Valor |
 #### Usuario1
 |Nombre | Valor |
 | ------ | ------ |
