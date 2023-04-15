@@ -1,0 +1,27 @@
+<% if(usuarioLogeado.admin==false || usuarioLogeado.admin==null || usuarioLogeado.admin==undefined) {%>
+
+  <form onsubmit="enviarMsg( `<%= usuarioLogeado._id %>`); return false ">
+    <label for="texto">Email</label>
+    <input type="email" id="email" name="texto" placeholder="ingrese email" required></imput>
+
+    <label for="nombre">nombre</label>
+    <input type="text" id="nombre" name="nombre" placeholder="ingrese nombre" required></imput>
+
+    <label for="edad">edad</label>
+    <input type="number" id="edad" name="edad" placeholder="ingrese edad" required></imput>
+
+    <br>
+    <label for="textArea">Escribir</label>
+    <input type="textarea" id="textArea" placeholder="escribir aquí"></imput>
+    <input type="submit" name="enviar" />
+  </form>
+  <% }else{ %>
+    <button onclick="listaDeChats()">
+      <h4>chats</h4>
+    </button>
+    <div id="listaDeChats"></div>
+    <div id="chateatUsuario">
+      <div id="formulario"></div>
+
+    </div>
+    <%}%>

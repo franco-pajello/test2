@@ -1,0 +1,56 @@
+<% if(usuarioLogeado.admin == true) {%>
+  <h3>POSTEAR O ACTUALIZAR UN PRODUCTO</h3>
+  <form >
+    <label for="producto ">producto</label>
+    <input id="productoId" type="text" name="producto" required />
+    <br />
+    <label for="precio ">precio</label>
+    <input type="number" id="precioId" name="precio" required />
+    <br />
+    <label for="img_url">img url</label>
+    <input type="text" id="img_url" name="img_url" required />
+    <br />
+    <label for="stock">Stock</label>
+    <input type="number" id="stockId" name="stock" required />
+    <br />
+    <label for="categoria">categoria</label>
+    <input type="text" id="categoria" name="categoria" required />
+    <br />
+    <button id="_id" value="" onclick="actualizarProducto(); return true ">actualizar</button>
+    <button onclick="cargarProductoDb(); return true">cargar</button>
+    <button onclick="limpiarForm(); return true">limpiar formulario</button>
+    <br />
+  </form>
+  
+
+<% }%>
+
+
+
+
+
+
+
+<!-- <form method="post" action="/uploadfile">
+  <label for="_id ">_id</label>
+  <input id="_id" type="text" name="_id" value="" required />
+  <br />
+  <label for="producto ">producto</label>
+  <input id="productoId" type="text" name="producto" required />
+  <br />
+  <label for="precio ">precio</label>
+  <input type="number" id="precioId" name="precio" required />
+  <br />
+  <label for="img_url">img url</label>
+  <input type="text" id="img_url" name="img_url" required />
+  <br />
+  <label for="stock">Stock</label>
+  <input type="number" id="stockId" name="stock" required />
+  <br />
+  <label for="categoria">categoria</label>
+  <input type="text" id="categoriaId" name="categoria" required />
+  <br />
+  <input type="submit" value="cargar un producto" />
+  <br />
+</form> -->
+<!-- onsubmit="cargarProductoDb(); return false;" -->

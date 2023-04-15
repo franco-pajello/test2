@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include ("../partials/head"); %>
+
+  <body>
+    <% if(usuarioLogeado) {%>
+     
+      <%-include("../partials/usuario"); %>
+      <a href="/logout">logout</a>
+    <a href="/api/carrito">CARRITO</a>
+   
+     <% if(admin) {%> 
+      <%-include("../partials/form"); %>
+      <% }%> 
+     <%-include("../partials/categorias"); %>
+    <%-include("../partials/productos"); %> <%-include("../partials/chat"); %> 
+   
+    <div id="chatLista"></div>
+    <% }else{ %>
+    <a href="/login">login</a>
+    <a href="/signup">reegistrarse</a>
+    <%}%>
+    <script src="../../public/index.js"></script>
+  </body>
+</html>
