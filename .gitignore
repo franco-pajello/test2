@@ -1,3 +1,5 @@
 node_modules
 txt.txt
-.env
+dev.env
+produccion.env
+*.env
