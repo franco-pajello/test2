@@ -8,7 +8,6 @@ const passport = require('passport');
 const routerDatos = Router();
 const {
   getDatosController,
-  getShowsessionController,
   getFailloginController,
   getFailsignupController,
   getLoginController,
@@ -53,7 +52,6 @@ routerDatos.use(passport.initialize());
 routerDatos.use(passport.session());
 
 routerDatos.get('/', getDatosController);
-routerDatos.get('/showsession', getShowsessionController);
 routerDatos.get('/faillogin', getFailloginController);
 routerDatos.get('/failsignup', getFailsignupController);
 routerDatos.get('/login', getLoginController);

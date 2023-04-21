@@ -1,17 +1,26 @@
-const config = require('../config/config.js');
-const { logger } = require('../logs/logWinston.js');
-const redis = require('redis');
+const RedisStore = require('connect-redis');
 const session = require('express-session');
-const client = redis.createClient({ legacyMode: true });
-client
-  .connect()
-  .then(() => logger.log('info', '127.0.0.1 - conectado a redis'))
-  .catch((error) => logger.log('error', '127.0.0.1 - log error', error));
-const redisStore = require('connect-redis')(session);
-const storeRedis = new redisStore({
-  host: config.LOCALHOST,
-  port: 6379,
-  client,
-  ttl: 3000,
+const { logger } = require('../logs/logWinston.js');
+const { createClient } = require('redis');
+const config = require('../config/config.js');
+const client = createClient({
+  password: config.PASSWORDREDIS,
+  socket: {
+    host: config.HOSTREDIS,
+    port: 16474,
+  },
 });
-module.exports = { storeRedis };
+
+const RedisStoreSession = RedisStore(session);
+
+const redisConnect = () => {
+  try {
+    client
+      .connect()
+      .then(() => logger.log('info', '127.0.0.1 - conectado a redis'))
+      .catch((error) => logger.log('error', '127.0.0.1 - log error', error));
+  } catch (error) {
+    logger.log('error', '127.0.0.1 - log error', error);
+  }
+};
+module.exports = { RedisStoreSession, redisConnect, client };

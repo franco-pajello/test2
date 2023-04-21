@@ -30,20 +30,16 @@ async function getByIdProductoDatabase(idProducto) {
 async function getSaveCarritoProducto(buscandoProductoDb, idProducto, _idUsuario) {
   return await carritoConstructor.save(buscandoProductoDb, idProducto, _idUsuario);
 }
-async function getUpDatePushProductoCarrito(idProducto, buscandoProductoDb, _idUsuario) {
-  return await carritoConstructor.upDatePush(idProducto, buscandoProductoDb, _idUsuario);
-}
-async function getUpDateByIdProductoCarrito(cantidad, indiceEncontrado, _idUsuario) {
-  carritoConstructor.upDateById(cantidad, indiceEncontrado, _idUsuario);
-}
 async function getDeleteByIdProductoCarrito(idCarrito, indiceEncontrado, producto) {
+  // para restar la cantidad un item hasta 1 -
   return await carritoConstructor.deleteByIdCarrito(idCarrito, indiceEncontrado, producto);
 }
 async function getDeleteItemIdProductoCarrito(idCarrito, producto) {
+  // wlimina un item sin importar su cantidad
   return await carritoConstructor.deleteItem(idCarrito, producto);
 }
-async function getDeleteAllProducstoCarrito() {
-  return await carritoConstructor.deleteAll();
+async function getDeleteAllProducstoCarrito(idCarrito) {
+  return await carritoConstructor.deleteAll(idCarrito);
 }
 
 module.exports = {
@@ -56,8 +52,6 @@ module.exports = {
   getUsuarioDatabase,
   getByIdProductoDatabase,
   getSaveCarritoProducto,
-  getUpDatePushProductoCarrito,
-  getUpDateByIdProductoCarrito,
   getDeleteByIdProductoCarrito,
   getDeleteAllProducstoCarrito,
   getDeleteItemIdProductoCarrito,

@@ -1,0 +1,1 @@
+{"level":"error","message":"127.0.0.1 - log error conectado is not defined","stack":"ReferenceError: conectado is not defined\n    at connectMG (C:\\estudio\\test2\\src\\utils\\connectToMongo.js:10:17)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}

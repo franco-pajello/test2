@@ -1,6 +1,6 @@
-<% if(usuarioLogeado.admin == true) {%>
+<% if(usuarioLogeado.admin==true) {%>
   <h3>POSTEAR O ACTUALIZAR UN PRODUCTO</h3>
-  <form >
+  <form>
     <label for="producto ">producto</label>
     <input id="productoId" type="text" name="producto" required />
     <br />
@@ -21,17 +21,17 @@
     <button onclick="limpiarForm(); return true">limpiar formulario</button>
     <br />
   </form>
-  
-
-<% }%>
 
 
+  <% }%>
 
 
 
 
 
-<!-- <form method="post" action="/uploadfile">
+
+
+    <!-- <form method="post" action="/uploadfile">
   <label for="_id ">_id</label>
   <input id="_id" type="text" name="_id" value="" required />
   <br />
@@ -53,4 +53,4 @@
   <input type="submit" value="cargar un producto" />
   <br />
 </form> -->
-<!-- onsubmit="cargarProductoDb(); return false;" -->
+    <!-- onsubmit="cargarProductoDb(); return false;" -->

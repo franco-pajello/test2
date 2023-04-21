@@ -13,11 +13,11 @@
           </li>
         </ul>
       </div>
-      <% if(produc.cantidad > 1) {%>
-      <button onclick="restarItemCarrito(`<%= produc._id %>`)">-</button>
-      <% } %>
-      <button onclick="cargarProductoCarrito(`<%= produc._id %>`)">+</button>
-      <button onclick="eliminarItemCarrito(`<%= produc._id %>`)">eliminar producto</button>
+      <% if(produc.cantidad> 1) {%>
+        <button onclick="restarItemCarrito(`<%= produc._id %>`)">-</button>
+        <% } %>
+          <button onclick="cargarProductoCarrito(`<%= produc._id %>`)">+</button>
+          <button onclick="eliminarItemCarrito(`<%= produc._id %>`)">eliminar producto</button>
     </div>
     <br>
     <% } ) %>

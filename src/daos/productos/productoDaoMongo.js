@@ -15,5 +15,25 @@ class ProductoDaosMongo extends productoRequire.Contenedor {
   constructor() {
     super('productos', modelo, nuevoElemento);
   }
+  async upDateProduct(id, body) {
+    try {
+      return await this.schema.updateOne(
+        { _id: `${id}` },
+        {
+          $set: {
+            _id: body._id,
+            producto: body.producto,
+            precio: body.precio,
+            img_url: body.img_url,
+            stock: body.stock,
+            categoria: body.categoria,
+            cantidad: 1,
+          },
+        },
+      );
+    } catch (error) {
+      logger.log('error', '127.0.0.1 - log error', error);
+    }
+  }
 }
 module.exports = { ProductoDaosMongo };

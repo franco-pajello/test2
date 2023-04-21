@@ -1,31 +1,29 @@
 # Ecommerce
 ## _Franco Pajello_
-Ecommerce en capas MVC basado en node.js y express con Mondo Atlas como base de datos.
+Ecommerce en capas MVC basado en node.js y express .
 ## Tecnologia
 se utiliza una serie de proyectos de código abierto para funcionar correctamente:
-- [JavaScript] 
+- [JavaScript] -
 - [node.js] 
 - [Express] 
 - [Ejs] 
 - [Socket io] 
 - [Passport] 
-## Caracteristicas de la pagina web
+## Características de la pagina web
  https://test2-production-45fe.up.railway.app/
 
-Pagina de inicio:
+Página de inicio:
 
 ```sh
-contiene la informacion del usuario logeado junto a un catalogo de productos que se pueden
-filtrar por categorias ademas de agregar el prodcto al carrito y comunicarse con soporte 
-mediante un chat 
+contiene la información del usuario logeado junto a un catálogo de productos que se pueden filtrar por categorías además de agregar el producto al carrito y comunicarse con soporte mediante un chat 
 ```
 
-Pagina del carrito:
+Página del carrito:
 
 ```sh
-en la misma podemos encontrar los producto seleccionados por el usuario, al cual desde alli
-mismo podemos sumar, restar o eliminar dicho producto tambien podremos apreciar el boton 
-para finalizar la compra
+En la misma podemos encontrar los producto seleccionados por el usuario, al cual desde allí
+mismo podemos sumar, restar o eliminar dicho producto,
+también podremos apreciar el botón para finalizar la compra
 ```
 ## Como levantar el proyecto 
 ✨Se recomienda al momento de descargar las dependencias para el proyecto utilizar npm ci
@@ -34,13 +32,21 @@ para finalizar la compra
 ```sh
 npm run dev
 ```
-#### Modo Produccion
+#### Modo Producción
 
 ```sh
 npm run prod
 ```
+## Testing de productos 
+Levantar el proyecto en modo dev o prod y en otra terminal ejecutar npm run test
+```sh
+npm run dev / npm run prod
+```
+```sh
+npm run test
+```
 ## Variables de entorno
-#### En produccion 
+#### En producción 
 En un archivo produccion.env
 |Nombre | Valor |
 | ------ | ------ |
@@ -50,6 +56,8 @@ En un archivo produccion.env
 | EMAILADMIN | xxxxxx |
 | PASSEMAILADMIN | xxxxx |
 | HOST | url de mongo |
+| PASSWORDREDIS | xxxxx |
+| HOSTREDIS | url de redis |
 | LOCALHOST | "127.0.0.1"|
 #### En Desarrollo 
 En un archivo dev.env
@@ -61,6 +69,8 @@ En un archivo dev.env
 | EMAILADMIN | xxxxxx |
 | PASSEMAILADMIN | xxxxx |
 | HOST | url de mongo |
+| PASSWORDREDIS | xxxxx |
+| HOSTREDIS | url de redis |
 | LOCALHOST | "127.0.0.1"|
 
 ## Usuarios creados
@@ -70,6 +80,7 @@ En un archivo dev.env
 | nombre | admin|
 | email | admin@gmail.com|
 | contraseña| admin |
+|Nombre | Valor |
 #### Usuario1
 |Nombre | Valor |
 | ------ | ------ |

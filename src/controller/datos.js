@@ -1,6 +1,5 @@
 const {
   getDatosService,
-  getShowsessionDatosService,
   getFailloginDatosService,
   getFailsignupDatosService,
   getLoginDatosService,
@@ -31,14 +30,6 @@ async function getDatosController(req, res) {
     return test == 'true' ? res.json({ user: 'usuario no logeado' }) : res.redirect('/login');
   } catch (error) {
     return res.json({ error: 'error inesperado' });
-  }
-}
-async function getShowsessionController(req, res) {
-  try {
-    const getShowsessionDatosServices = await getShowsessionDatosService();
-    res.json(getShowsessionDatosServices);
-  } catch (error) {
-    return res.json({ error: 'error al cargar los dstos' });
   }
 }
 async function getFailloginController(req, res) {
@@ -189,7 +180,8 @@ async function deleteIdCarritoidController(req, res) {
   }
 }
 async function deleteCarritoController(req, res) {
-  await deleteCarritoDatosService();
+  const user = req.isAuthenticated() ? ({ username, password, email, foto, telefono, edad, admin } = req.user) : false;
+  await deleteCarritoDatosService(user);
   return res.redirect('/api/carrito');
 }
 async function rutaInexistenteController(req, res) {
@@ -204,7 +196,6 @@ async function rutaInexistenteController(req, res) {
 
 module.exports = {
   getDatosController,
-  getShowsessionController,
   getFailloginController,
   getFailsignupController,
   getLoginController,

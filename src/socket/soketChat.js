@@ -25,9 +25,9 @@ module.exports = function (io) {
       io.sockets.emit('chats', chats);
     });
     Socket.on('chateatUsuario', async (id) => {
-      const buscandoMsgs = await chat.getById(id);
-      let array = buscandoMsgs;
-      io.sockets.emit('usuarioChateat', array.msgs);
+      const todoElChat = await chat.getById(id);
+      let array = todoElChat;
+      await io.sockets.emit('chatLista', array.msgs);
     });
   });
 };

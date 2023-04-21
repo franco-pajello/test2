@@ -1,6 +1,5 @@
 const request = require('supertest')('http://localhost:8080');
 const expect = require('chai').expect;
-const faker = require('@faker-js/faker').faker;
 let id = '';
 const generatePost = () => {
   return { _id: '1', producto: 'Naranja', precio: 300, img_url: 'no hay ', stock: 300, categoria: 'fruta' };

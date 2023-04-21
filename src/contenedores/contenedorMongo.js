@@ -19,7 +19,6 @@ class Contenedor {
       return { success: false, error: err };
     }
   }
-
   async getById(id) {
     try {
       const TraerTodo = await this.schema.findById({ _id: `${id}` });
@@ -64,101 +63,12 @@ class Contenedor {
       return { success: false, error: err };
     }
   }
-
-  async deleteByIdCarrito(idCarrito, indiceEncontrado, producto) {
-    try {
-      let indice = `producto.${indiceEncontrado}.cantidad`;
-      let cantidad = producto.cantidad;
-      if (producto.cantidad > 1) {
-        return await this.schema.updateOne(
-          { _id: idCarrito },
-          {
-            $set: {
-              [indice]: cantidad - 1,
-            },
-          },
-        );
-      }
-      return;
-    } catch (err) {
-      return false;
-    }
-  }
-  async deleteItem(idCarrito, producto) {
-    try {
-      let prodId = producto._id;
-      return await this.schema.updateOne(
-        { _id: idCarrito },
-        {
-          $pull: { producto: { _id: prodId } },
-        },
-      );
-    } catch (err) {
-      return false;
-    }
-  }
   async deleteById(id) {
     try {
       return this.schema.deleteOne({ _id: `${id}` });
     } catch (err) {
       return false;
     }
-  }
-
-  async upDateById(cantidad, indiceEncontrado, _idUsuario) {
-    try {
-      let indice = `producto.${indiceEncontrado}.cantidad`;
-      await this.schema.updateOne(
-        { _id: _idUsuario },
-        {
-          $set: {
-            [indice]: cantidad + 1,
-          },
-        },
-      );
-    } catch (error) {
-      logger.log('error', '127.0.0.1 - log error', error);
-    }
-  }
-  async upDateProduct(id, body) {
-    try {
-      return await this.schema.updateOne(
-        { _id: `${id}` },
-        {
-          $set: {
-            _id: body._id,
-            producto: body.producto,
-            precio: body.precio,
-            img_url: body.img_url,
-            stock: body.stock,
-            categoria: body.categoria,
-            cantidad: 1,
-          },
-        },
-      );
-    } catch (error) {
-      logger.log('error', '127.0.0.1 - log error', error);
-    }
-  }
-  async upDatePush(id, body, _id) {
-    await this.schema.updateOne(
-      { _id: _id },
-      {
-        $push: {
-          producto: [
-            {
-              _id: id,
-              producto: body.producto,
-              precio: body.precio,
-              img_url: body.img_url,
-              stock: body.stock,
-              categoria: body.categoria,
-              cantidad: 1,
-            },
-          ],
-        },
-      },
-    );
   }
 }
 module.exports = { Contenedor };

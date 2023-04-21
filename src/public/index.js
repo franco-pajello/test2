@@ -82,7 +82,7 @@ async function enviarMsg(id) {
       document.getElementById('chatLista').innerHTML = htmlMsg;
 
       document.getElementById('textArea').value = '';
-      listaDeChats();
+      await socket.emit('listaDeChats');
     });
   } catch (e) {
     console.log(e);
@@ -91,10 +91,9 @@ async function enviarMsg(id) {
 async function listaDeChats() {
   try {
     await socket.emit('listaDeChats');
-    socket.on('chats', (data) => {
+    socket.on('chats', async (data) => {
       let htmlChats = '';
-      console.log(data);
-      data.forEach((msgData) => {
+      await data.forEach((msgData) => {
         htmlChats += `
             <div>
             <button   onclick=chateatUsuario("${msgData.id}") >${msgData.username}</button>
@@ -109,7 +108,7 @@ async function listaDeChats() {
 function chateatUsuario(id) {
   try {
     socket.emit('chateatUsuario', id);
-    socket.on('usuarioChateat', (data) => {
+    socket.on('chatLista', (data) => {
       let htmlUsuarioMsgEnAdmin = '';
       data.forEach((msgData) => {
         htmlUsuarioMsgEnAdmin += `
@@ -142,6 +141,17 @@ function chateatUsuario(id) {
 }
 async function cargarProductoDb() {
   try {
+    const id = await document.getElementById(`_id`).value;
+    if (id) {
+      {
+        document.getElementById(`productoId`).value = 'producto no valido';
+        document.getElementById(`precioId`).value = '';
+        document.getElementById(`stockId`).value = '';
+        document.getElementById(`img_url`).value = '';
+        document.getElementById(`categoria`).value = '';
+      }
+      return;
+    }
     let options = {
       method: 'POST',
       headers: { 'Content-type': 'application/json; charset=utf-8 ' },
@@ -159,7 +169,7 @@ async function cargarProductoDb() {
     console.log(e);
   }
 }
-const enviarProductoAlForm = (id, stock, categoria) => {
+const enviarProductoAlForm = async (id, stock, categoria) => {
   try {
     let productoId = (document.getElementById(`productoId`).value = document.getElementById(`productoValue${id}`).textContent);
     let precioId = (document.getElementById(`precioId`).value = document.getElementById(`precioValue${id}`).textContent);
@@ -175,7 +185,6 @@ async function actualizarProducto() {
   try {
     const id = await document.getElementById(`_id`).value;
     if (id !== '') {
-      console.log('en id', id);
       let options = {
         method: 'PUT',
         headers: { 'Content-type': 'application/json; charset=utf-8 ' },
@@ -200,7 +209,6 @@ async function actualizarProducto() {
   }
 }
 async function EliminarProducto(id) {
-  console.log(id);
   try {
     let options = {
       method: 'DELETE',
@@ -261,9 +269,8 @@ async function vaciarCarrito() {
       method: 'DELETE',
       headers: { 'Content-type': 'application/json; charset=utf-8 ' },
     };
-    await fetch(`http://localhost:8080/api/carrito`, options)
-      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
-      .catch((e) => logger.log('error', '127.0.0.1 - log error', e));
+
+    await fetch(`http://localhost:8080/api/carrito`, options);
   } catch (e) {
     console.log(e);
   }

@@ -10,4 +10,6 @@ module.exports = {
   HOST: process.env.HOST,
   LOCALHOST: process.env.LOCALHOST,
   TEST: process.env.Test,
+  PASSWORDREDIS: process.env.PASSWORDREDIS,
+  HOSTREDIS: process.env.HOSTREDIS,
 };

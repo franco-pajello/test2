@@ -1,9 +1,10 @@
 const ProductosDaoMongo = require('./productos/productoDaoMongo.js').ProductoDaosMongo;
-const productoDaoFirebase = require('./productos/productoDaoFirebase.js').PoductosDaosFirebase;
 const carritoDaoMongo = require('./carrito/carritoDaoMongo.js').CarritoDaosMongo;
-const carritoDaoFirebase = require('./carrito/carritoDaoFirebase.js').CarritoDaosFirebase;
 const chatDaoMongo = require('./chat/chatDaoMongo.js').chatDaosMongo;
 const sessionesMongoAtlas = require('./sessions/sessionMongoAtlas.js').session;
+const productoDaoarchivo = require('./productos/productoDaoArchivo.js').productoDaoArchivo;
+const carritoDaoarchivo = require('./carrito/carritoDaoArchivo.js').carrito;
+const chatDaoarchivo = require('./chat/chatArchivo.js').chatDaosArchivo;
 const config = require('../config/config.js');
 
 const instancias = [
@@ -29,24 +30,24 @@ const instancias = [
   },
 
   {
-    nombre: productoDaoFirebase,
-    id: 'firebase',
+    nombre: productoDaoarchivo,
+    id: 'archivo',
     descripcion: 'producto',
   },
   {
-    nombre: carritoDaoFirebase,
-    id: 'firebase',
+    nombre: carritoDaoarchivo,
+    id: 'archivo',
     descripcion: 'carrito',
   },
   {
-    nombre: carritoDaoFirebase,
-    id: 'firebase',
-    descripcion: 'carrito',
+    nombre: chatDaoarchivo,
+    id: 'archivo',
+    descripcion: 'chat',
   },
   {
-    nombre: carritoDaoFirebase,
-    id: 'firebase',
-    descripcion: 'carrito',
+    nombre: sessionesMongoAtlas,
+    id: 'archivo',
+    descripcion: 'sesion',
   },
 ];
 

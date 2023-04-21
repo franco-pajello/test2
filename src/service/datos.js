@@ -47,14 +47,6 @@ async function getDatosService(isAuthenticated, user) {
     return error;
   }
 }
-async function getShowsessionDatosService() {
-  try {
-    return req.session;
-  } catch (error) {
-    logger.log('error', '127.0.0.1 - log error', error);
-    return error;
-  }
-}
 async function getFailloginDatosService() {
   try {
     return 'partials/loginFail';
@@ -89,7 +81,7 @@ async function getSignupDatosService() {
 }
 async function getLogoutDatosService() {
   try {
-    return `http://127.0.0.1:8080`;
+    return `/`;
   } catch (error) {
     logger.log('error', '127.0.0.1 - log error', error);
     return error;
@@ -141,7 +133,6 @@ async function postUploadfileDatosService(body, req, next) {
 }
 async function putIdDatosService(id, body, req, next) {
   const putIdValisation = await putIdValisations(req);
-
   if (putIdValisation) {
     next;
   } else {
@@ -209,37 +200,15 @@ async function postCarritoDatosService(isAuthenticated, user, body) {
 
       const idProducto = await body.id;
 
+      const buscandoProductoDb = await getByIdProductoDatabase(idProducto);
+
+      await getSaveCarritoProducto(buscandoProductoDb, idProducto, _idUsuario);
       const buscandoCarrito = await getByIdProductoCarritoDatabase(_idUsuario);
       let arrayCarrito = buscandoCarrito ? await buscandoCarrito.producto : [];
-
-      const buscandoProductoDb = await getByIdProductoDatabase(idProducto);
-      if (buscandoCarrito == undefined || buscandoCarrito == null) {
-        await getSaveCarritoProducto(buscandoProductoDb, idProducto, _idUsuario);
-
-        return {
-          productoCarrito: arrayCarrito,
-          usuarioLogeado: user,
-        };
-      } else {
-        const indiceEncontrado = arrayCarrito.findIndex((producto) => producto._id == idProducto);
-
-        if (indiceEncontrado < 0) {
-          await getUpDatePushProductoCarrito(idProducto, buscandoProductoDb, _idUsuario);
-          return {
-            productoCarrito: arrayCarrito,
-            usuarioLogeado: user,
-          };
-        } else {
-          let cantidad = buscandoCarrito.producto[indiceEncontrado].cantidad;
-
-          await getUpDateByIdProductoCarrito(cantidad, indiceEncontrado, _idUsuario);
-
-          return {
-            productoCarrito: arrayCarrito,
-            usuarioLogeado: user,
-          };
-        }
-      }
+      return {
+        productoCarrito: arrayCarrito,
+        usuarioLogeado: user,
+      };
     }
     return '/login';
   } catch (error) {
@@ -256,11 +225,9 @@ async function postFinalizarcompraDatosService(isAuthenticated, username, email)
       const buscandoCarrito = await getByIdProductoCarritoDatabase(_idUsuario);
 
       let productos = await buscandoCarrito.producto;
-
       await twilio(productos, username);
       await emailConfirmacionCompra(email, username, productos);
-
-      await getDeleteByIdProductoCarrito(_idUsuario);
+      await getDeleteAllProducstoCarrito(_idUsuario);
     }
   } catch (error) {
     logger.log('error', '127.0.0.1 - log error', error);
@@ -290,7 +257,6 @@ async function deleteIdCarritoidDatosService(idProducto, user) {
     return;
   }
 }
-
 async function deleteItemIdCarritoidDatosService(idProducto, user) {
   try {
     const buscandoUsuario = await getUsuarioDatabase(user.username);
@@ -311,9 +277,9 @@ async function deleteItemIdCarritoidDatosService(idProducto, user) {
     return;
   }
 }
-async function deleteCarritoDatosService() {
+async function deleteCarritoDatosService(user) {
   try {
-    await getDeleteAllProducstoCarrito();
+    await getDeleteAllProducstoCarrito(user._id);
     return;
   } catch (error) {
     logger.log('error', '127.0.0.1 - log error', error);
@@ -331,7 +297,6 @@ async function rutaInexistenteDatosService() {
 
 module.exports = {
   getDatosService,
-  getShowsessionDatosService,
   getFailloginDatosService,
   getFailsignupDatosService,
   getLoginDatosService,

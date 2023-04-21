@@ -2,21 +2,27 @@
     <div id="productos">
       <div>
         <ul>
-          <li id= productoValue<%= produc._id %>>
+          <li id=productoValue<%=produc._id %>>
             <%= produc.producto %>
           </li>
-          <li><img   id="imgValue<%= produc._id %>"    src="<%= produc.img_url %>" alt="#" /></li>
-          <li id="precioValue<%= produc._id %>"  ><%= produc.precio %></li>
-          <li id="stockValue<%= produc._id %>"  ><%= produc.stock %></li>
+          <li><img id="imgValue<%= produc._id %>" src="<%= produc.img_url %>" alt="#" /></li>
+          <li id="precioValue<%= produc._id %>">
+            <%= produc.precio %>
+          </li>
+          <li id="stockValue<%= produc._id %>">
+            <%= produc.stock %>
+          </li>
         </ul>
       </div>
       <button onclick="cargarProductoCarrito(`<%= produc._id %>`)">cargar producto al carrito</button>
-      <% if(usuarioLogeado.admin == true) {%>
-      <button onclick="enviarProductoAlForm(`<%= produc._id %>`, `<%= produc.stock %>`,`<%= produc.categoria %>`)">editar producto</button>
-      <button onclick="EliminarProducto(`<%= produc._id %>`)">eliminar producto</button>
+      <% if(usuarioLogeado.admin==true) {%>
+        <button
+          onclick="enviarProductoAlForm(`<%= produc._id %>`, `<%= produc.stock %>`,`<%= produc.categoria %>`)">editar
+          producto</button>
+        <button onclick="EliminarProducto(`<%= produc._id %>`)">eliminar producto</button>
     </div>
     <% }%>
-    <% } ) %>
-      <% }else{ %>
-        <h2>no hay productos</h2>
-        <%}%>
+      <% } ) %>
+        <% }else{ %>
+          <h2>no hay productos</h2>
+          <%}%>

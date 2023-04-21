@@ -9,7 +9,7 @@ const modeloDelchat = new Schema({
         edad: { type: Number, require: false },
         nombre: { type: String, require: false },
       },
-      fecha: { type: Date, require: false },
+      fecha: { type: String, require: false },
       msg: { type: String, require: false },
     },
   ],

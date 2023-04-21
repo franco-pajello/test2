@@ -14,11 +14,11 @@ let login = new LocalStrategy(async (username, password, done) => {
       return done(err);
     }
     if (!user) {
-      logger.log('info', '127.0.0.1 - log info', 'no se encontro el usuario');
+      logger.log('info', '127.0.0.1 - log info no se encontro el usuario');
       return done(null, false);
     }
     if (!isValidPassword(user, password)) {
-      logger.log('info', '127.0.0.1 - log info', 'contraseña invalida');
+      logger.log('info', '127.0.0.1 - log info contraseña invalida');
       return done(null, false);
     }
 
