@@ -10,7 +10,7 @@ se utiliza una serie de proyectos de código abierto para funcionar correctament
 - [Socket io] 
 - [Passport] 
 ## Características de la pagina web
- test2-production-6e0f.up.railway.app
+ https://test2-production-45fe.up.railway.app/
 
 Página de inicio:
 
@@ -56,9 +56,16 @@ En un archivo produccion.env
 | EMAILADMIN | xxxxxx |
 | PASSEMAILADMIN | xxxxx |
 | HOST | url de mongo |
+| LOCALHOST | "127.0.0.1"|
+| TEST | "false"|
 | PASSWORDREDIS | xxxxx |
 | HOSTREDIS | url de redis |
-| LOCALHOST | "127.0.0.1"|
+| ACCOUNTSIDTWILIO |xxx|
+| AUTHTOKENTWILIO | xxx|
+| MESSAGINGSERVICESID |xxx|
+| CLIENTMESSAGESTO |xxx|
+| WHATSAPPTWILIOFROM |xxx|
+| WHATSAPPTWILIOTO | xxx|
 #### En Desarrollo 
 En un archivo dev.env
 |Nombre | Valor |
@@ -69,9 +76,16 @@ En un archivo dev.env
 | EMAILADMIN | xxxxxx |
 | PASSEMAILADMIN | xxxxx |
 | HOST | url de mongo |
+| LOCALHOST | "127.0.0.1"|
+| TEST | "false"|
 | PASSWORDREDIS | xxxxx |
 | HOSTREDIS | url de redis |
-| LOCALHOST | "127.0.0.1"|
+ ACCOUNTSIDTWILIO |xxx|
+| AUTHTOKENTWILIO | xxx|
+| MESSAGINGSERVICESID |xxx|
+| CLIENTMESSAGESTO |xxx|
+| WHATSAPPTWILIOFROM |xxx|
+| WHATSAPPTWILIOTO | xxx|
 
 ## Usuarios creados
 #### Admin
