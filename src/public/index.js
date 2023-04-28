@@ -14,35 +14,6 @@ async function categoria() {
     console.log(e);
   }
 }
-async function login() {
-  try {
-    let options = {
-      method: 'post',
-      headers: { 'Content-type': 'application/json; charset=utf-8 ' },
-      body: JSON.stringify({
-        nombre: document.getElementById('nombreId').value,
-      }),
-    };
-    await fetch('http://localhost:8080/api/productos/login', options)
-      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
-      .catch((err) => logger.log('error', '127.0.0.1 - log error', err));
-  } catch (e) {
-    console.log(e);
-  }
-}
-async function logout() {
-  try {
-    let options = {
-      method: 'post',
-      headers: { 'Content-type': 'application/json; charset=utf-8 ' },
-    };
-    await fetch('http://localhost:8080/api/productos/logout', options)
-      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
-      .catch((err) => logger.log('error', '127.0.0.1 - log error'));
-  } catch (e) {
-    console.log(e);
-  }
-}
 async function enviarMsg(id) {
   try {
     const fechaActual = Date.now();
