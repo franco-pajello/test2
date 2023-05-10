@@ -55,7 +55,7 @@ En un archivo produccion.env
 | TIPO_PERSISTENCIA| "mongo" |
 | EMAILADMIN | xxxxxx |
 | PASSEMAILADMIN | xxxxx |
-| HOST | url de mongo |
+| HOST | 'mongodb+srv://franco-pajello:pTtXmDnVqw33o5Qx@cluster0.8t2nx9j.mongodb.net/ecommerce' |
 | LOCALHOST | "127.0.0.1"|
 | TEST | "false"|
 | PASSWORDREDIS | xxxxx |
@@ -75,7 +75,7 @@ En un archivo dev.env
 | TIPO_PERSISTENCIA| "mongo" |
 | EMAILADMIN | xxxxxx |
 | PASSEMAILADMIN | xxxxx |
-| HOST | url de mongo |
+| HOST | 'mongodb+srv://franco-pajello:pTtXmDnVqw33o5Qx@cluster0.8t2nx9j.mongodb.net/ecommerce' |
 | LOCALHOST | "127.0.0.1"|
 | TEST | "false"|
 | PASSWORDREDIS | xxxxx |
