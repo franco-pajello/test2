@@ -38,7 +38,7 @@ async function getFailloginController(req, res) {
     if (getFailloginDatosServices) {
       return res.render(getFailloginDatosServices);
     }
-    return res.json({ error: 'ocurrio un error al logearse' });
+    return res.json({ error: 'ocurrio un error al loguearse' });
   } catch (error) {
     return res.json({ error: 404 });
   }
