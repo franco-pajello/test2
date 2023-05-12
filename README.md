@@ -10,7 +10,7 @@ se utiliza una serie de proyectos de código abierto para funcionar correctament
 - [Socket io] 
 - [Passport] 
 ## Características de la pagina web
-test2-production-6e0f.up.railway.app
+https://test2-production-6e0f.up.railway.app
 
 Página de inicio:
 
